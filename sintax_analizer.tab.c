@@ -808,11 +808,11 @@ static const yytype_int16 yyrline[] =
      314,   314,   326,   326,   327,   327,   337,   337,   339,   341,
      341,   343,   343,   345,   345,   345,   347,   347,   355,   355,
      365,   367,   368,   369,   370,   371,   373,   374,   375,   376,
-     377,   378,   379,   381,   382,   384,   389,   390,   391,   392,
-     393,   394,   395,   396,   397,   398,   399,   400,   401,   402,
-     403,   404,   405,   406,   407,   408,   409,   410,   411,   417,
-     419,   419,   421,   421,   423,   424,   426,   426,   426,   428,
-     428,   430,   431,   432,   434,   434,   434,   434
+     377,   378,   379,   381,   382,   384,   395,   396,   397,   398,
+     399,   400,   401,   402,   403,   404,   405,   406,   407,   408,
+     409,   410,   411,   412,   413,   414,   415,   416,   417,   423,
+     425,   425,   427,   427,   429,   430,   432,   432,   432,   434,
+     434,   436,   437,   438,   440,   440,   440,   440
 };
 #endif
 
@@ -1920,206 +1920,212 @@ yyreduce:
   case 95: /* exp_op: exp_op OP_ADD exp_op  */
 #line 384 "sintax_analizer.y"
                                      {
-    (yyvsp[-2].ival) = (yyvsp[-2].ival) == 1 || (yyvsp[-2].ival) == 4 ? 5 : (yyvsp[-2].ival);
-    (yyvsp[0].ival) = (yyvsp[0].ival) == 1 || (yyvsp[0].ival) == 4 ? 5 : (yyvsp[0].ival);
-    (yyval.ival) = (yyvsp[-2].ival) == 5 || (yyvsp[0].ival) == 5 ? 5 : (yyvsp[-2].ival) == 3 || (yyvsp[0].ival) == 3 ? 3 : 2;
+    if ((yyvsp[-2].ival) == 4 && (yyvsp[0].ival) == 4) {
+        printf("Logical error at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
+        hasErrors = true;
+        (yyval.ival) = 0;
+    } else {
+        (yyvsp[-2].ival) = (yyvsp[-2].ival) == 1 || (yyvsp[-2].ival) == 4 ? 5 : (yyvsp[-2].ival);
+        (yyvsp[0].ival) = (yyvsp[0].ival) == 1 || (yyvsp[0].ival) == 4 ? 5 : (yyvsp[0].ival);
+        (yyval.ival) = (yyvsp[-2].ival) == 5 || (yyvsp[0].ival) == 5 ? 5 : (yyvsp[-2].ival) == 3 || (yyvsp[0].ival) == 3 ? 3 : 2;
+    }
 }
-#line 1928 "sintax_analizer.tab.c"
-    break;
-
-  case 96: /* exp_op: exp_op OP_SUB exp_op  */
-#line 389 "sintax_analizer.y"
-                                     { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1934 "sintax_analizer.tab.c"
     break;
 
-  case 97: /* exp_op: exp_op OP_MUL exp_op  */
-#line 390 "sintax_analizer.y"
+  case 96: /* exp_op: exp_op OP_SUB exp_op  */
+#line 395 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1940 "sintax_analizer.tab.c"
     break;
 
-  case 98: /* exp_op: exp_op OP_DIV exp_op  */
-#line 391 "sintax_analizer.y"
+  case 97: /* exp_op: exp_op OP_MUL exp_op  */
+#line 396 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1946 "sintax_analizer.tab.c"
     break;
 
-  case 99: /* exp_op: exp_op OP_MOD exp_op  */
-#line 392 "sintax_analizer.y"
+  case 98: /* exp_op: exp_op OP_DIV exp_op  */
+#line 397 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1952 "sintax_analizer.tab.c"
     break;
 
-  case 100: /* exp_op: OP_SUB exp_op  */
-#line 393 "sintax_analizer.y"
-                                           { (yyval.ival) = checkNumsOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
+  case 99: /* exp_op: exp_op OP_MOD exp_op  */
+#line 398 "sintax_analizer.y"
+                                     { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1958 "sintax_analizer.tab.c"
     break;
 
-  case 101: /* exp_op: exp_op OP_GT exp_op  */
-#line 394 "sintax_analizer.y"
-                                    { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 100: /* exp_op: OP_SUB exp_op  */
+#line 399 "sintax_analizer.y"
+                                           { (yyval.ival) = checkNumsOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
 #line 1964 "sintax_analizer.tab.c"
     break;
 
-  case 102: /* exp_op: exp_op OP_LT exp_op  */
-#line 395 "sintax_analizer.y"
+  case 101: /* exp_op: exp_op OP_GT exp_op  */
+#line 400 "sintax_analizer.y"
                                     { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1970 "sintax_analizer.tab.c"
     break;
 
-  case 103: /* exp_op: exp_op OP_GTE exp_op  */
-#line 396 "sintax_analizer.y"
-                                     { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 102: /* exp_op: exp_op OP_LT exp_op  */
+#line 401 "sintax_analizer.y"
+                                    { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1976 "sintax_analizer.tab.c"
     break;
 
-  case 104: /* exp_op: exp_op OP_LTE exp_op  */
-#line 397 "sintax_analizer.y"
+  case 103: /* exp_op: exp_op OP_GTE exp_op  */
+#line 402 "sintax_analizer.y"
                                      { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1982 "sintax_analizer.tab.c"
     break;
 
-  case 105: /* exp_op: exp_op OP_EQ exp_op  */
-#line 398 "sintax_analizer.y"
-                                    { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 104: /* exp_op: exp_op OP_LTE exp_op  */
+#line 403 "sintax_analizer.y"
+                                     { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1988 "sintax_analizer.tab.c"
     break;
 
-  case 106: /* exp_op: exp_op OP_NEQ exp_op  */
-#line 399 "sintax_analizer.y"
-                                     { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 105: /* exp_op: exp_op OP_EQ exp_op  */
+#line 404 "sintax_analizer.y"
+                                    { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 1994 "sintax_analizer.tab.c"
     break;
 
-  case 107: /* exp_op: exp_op OP_AND exp_op  */
-#line 400 "sintax_analizer.y"
-                                     { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 106: /* exp_op: exp_op OP_NEQ exp_op  */
+#line 405 "sintax_analizer.y"
+                                     { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2000 "sintax_analizer.tab.c"
     break;
 
-  case 108: /* exp_op: exp_op OP_OR exp_op  */
-#line 401 "sintax_analizer.y"
-                                    { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 107: /* exp_op: exp_op OP_AND exp_op  */
+#line 406 "sintax_analizer.y"
+                                     { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2006 "sintax_analizer.tab.c"
     break;
 
-  case 109: /* exp_op: OP_NOT exp_op  */
-#line 402 "sintax_analizer.y"
-                              { (yyval.ival) = checkLogicOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
+  case 108: /* exp_op: exp_op OP_OR exp_op  */
+#line 407 "sintax_analizer.y"
+                                    { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2012 "sintax_analizer.tab.c"
     break;
 
-  case 110: /* exp_op: var_value OP_ASSIGN exp_op  */
-#line 403 "sintax_analizer.y"
-                                           { (yyval.ival) = singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 109: /* exp_op: OP_NOT exp_op  */
+#line 408 "sintax_analizer.y"
+                              { (yyval.ival) = checkLogicOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
 #line 2018 "sintax_analizer.tab.c"
     break;
 
-  case 111: /* exp_op: var_value OP_ADD_ASSIGN exp_op  */
-#line 404 "sintax_analizer.y"
-                                               { (yyval.ival) = checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 110: /* exp_op: var_value OP_ASSIGN exp_op  */
+#line 409 "sintax_analizer.y"
+                                           { (yyval.ival) = singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2024 "sintax_analizer.tab.c"
     break;
 
-  case 112: /* exp_op: var_value OP_SUB_ASSIGN exp_op  */
-#line 405 "sintax_analizer.y"
-                                               { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 111: /* exp_op: var_value OP_ADD_ASSIGN exp_op  */
+#line 410 "sintax_analizer.y"
+                                               { (yyval.ival) = checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2030 "sintax_analizer.tab.c"
     break;
 
-  case 113: /* exp_op: var_value OP_MUL_ASSIGN exp_op  */
-#line 406 "sintax_analizer.y"
+  case 112: /* exp_op: var_value OP_SUB_ASSIGN exp_op  */
+#line 411 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2036 "sintax_analizer.tab.c"
     break;
 
-  case 114: /* exp_op: var_value OP_DIV_ASSIGN exp_op  */
-#line 407 "sintax_analizer.y"
+  case 113: /* exp_op: var_value OP_MUL_ASSIGN exp_op  */
+#line 412 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2042 "sintax_analizer.tab.c"
     break;
 
-  case 115: /* exp_op: var_value OP_MOD_ASSIGN exp_op  */
-#line 408 "sintax_analizer.y"
+  case 114: /* exp_op: var_value OP_DIV_ASSIGN exp_op  */
+#line 413 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2048 "sintax_analizer.tab.c"
     break;
 
-  case 116: /* exp_op: LEFT_PARENT exp_op RIGHT_PARENT  */
-#line 409 "sintax_analizer.y"
-                                                { (yyval.ival) = (yyvsp[-1].ival); }
+  case 115: /* exp_op: var_value OP_MOD_ASSIGN exp_op  */
+#line 414 "sintax_analizer.y"
+                                               { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2054 "sintax_analizer.tab.c"
     break;
 
-  case 117: /* exp_op: value_data  */
-#line 410 "sintax_analizer.y"
-                           { (yyval.ival) = (yyvsp[0].ival); }
+  case 116: /* exp_op: LEFT_PARENT exp_op RIGHT_PARENT  */
+#line 415 "sintax_analizer.y"
+                                                { (yyval.ival) = (yyvsp[-1].ival); }
 #line 2060 "sintax_analizer.tab.c"
     break;
 
+  case 117: /* exp_op: value_data  */
+#line 416 "sintax_analizer.y"
+                           { (yyval.ival) = (yyvsp[0].ival); }
+#line 2066 "sintax_analizer.tab.c"
+    break;
+
   case 118: /* exp_op: func_call  */
-#line 411 "sintax_analizer.y"
+#line 417 "sintax_analizer.y"
                           { (yyval.ival) = (yyvsp[0].ival);
     if ((yyvsp[0].ival) == 0) {
         printf("Logical error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 2071 "sintax_analizer.tab.c"
-    break;
-
-  case 119: /* exp_op: inc_dec  */
-#line 417 "sintax_analizer.y"
-                        { (yyval.ival) = (yyvsp[0].ival); }
 #line 2077 "sintax_analizer.tab.c"
     break;
 
-  case 120: /* inc_dec: var_value ops_inc_dec  */
-#line 419 "sintax_analizer.y"
-                                      { (yyval.ival) = checkIncrementDecrement((yyvsp[-1].ival)); }
+  case 119: /* exp_op: inc_dec  */
+#line 423 "sintax_analizer.y"
+                        { (yyval.ival) = (yyvsp[0].ival); }
 #line 2083 "sintax_analizer.tab.c"
     break;
 
-  case 121: /* inc_dec: ops_inc_dec var_value  */
-#line 419 "sintax_analizer.y"
-                                                                                                    { (yyval.ival) = checkIncrementDecrement((yyvsp[0].ival)); }
+  case 120: /* inc_dec: var_value ops_inc_dec  */
+#line 425 "sintax_analizer.y"
+                                      { (yyval.ival) = checkIncrementDecrement((yyvsp[-1].ival)); }
 #line 2089 "sintax_analizer.tab.c"
     break;
 
-  case 124: /* func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT  */
-#line 423 "sintax_analizer.y"
-                                                    { (yyval.ival) = getSymbType((yyvsp[-2].sval), true); }
+  case 121: /* inc_dec: ops_inc_dec var_value  */
+#line 425 "sintax_analizer.y"
+                                                                                                    { (yyval.ival) = checkIncrementDecrement((yyvsp[0].ival)); }
 #line 2095 "sintax_analizer.tab.c"
     break;
 
-  case 125: /* func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT  */
-#line 424 "sintax_analizer.y"
-                                                              { (yyval.ival) = getSymbType((yyvsp[-3].sval), true); }
+  case 124: /* func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT  */
+#line 429 "sintax_analizer.y"
+                                                    { (yyval.ival) = getSymbType((yyvsp[-2].sval), true); }
 #line 2101 "sintax_analizer.tab.c"
     break;
 
-  case 131: /* asingn: var_value OP_ASSIGN exp_op  */
+  case 125: /* func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT  */
 #line 430 "sintax_analizer.y"
-                                           { singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+                                                              { (yyval.ival) = getSymbType((yyvsp[-3].sval), true); }
 #line 2107 "sintax_analizer.tab.c"
     break;
 
-  case 132: /* asingn: var_value OP_ADD_ASSIGN exp_op  */
-#line 431 "sintax_analizer.y"
-                                               { checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 131: /* asingn: var_value OP_ASSIGN exp_op  */
+#line 436 "sintax_analizer.y"
+                                           { singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2113 "sintax_analizer.tab.c"
     break;
 
-  case 133: /* asingn: var_value ops_assign exp_op  */
-#line 432 "sintax_analizer.y"
-                                            { checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+  case 132: /* asingn: var_value OP_ADD_ASSIGN exp_op  */
+#line 437 "sintax_analizer.y"
+                                               { checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2119 "sintax_analizer.tab.c"
     break;
 
+  case 133: /* asingn: var_value ops_assign exp_op  */
+#line 438 "sintax_analizer.y"
+                                            { checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
+#line 2125 "sintax_analizer.tab.c"
+    break;
 
-#line 2123 "sintax_analizer.tab.c"
+
+#line 2129 "sintax_analizer.tab.c"
 
       default: break;
     }
@@ -2312,7 +2318,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 435 "sintax_analizer.y"
+#line 441 "sintax_analizer.y"
 
 
 void yyerror() {

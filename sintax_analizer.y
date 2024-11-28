@@ -156,6 +156,15 @@ void addFunctionParam(char* name, int type) {
     syms[symCount] = (SYM) {name, false, type, scopeLevel + 1};
     symCount++;
 }
+void addForNumber(char* name) {
+    if (!existSymb(name, false)) {
+        syms[symCount] = (SYM) {name, false, 2, scopeLevel + 1};
+        symCount++;
+        return;
+    }
+    printf("Definition error at line %d: variable define inside for %s is already defined\n", lineNumber, name);
+    hasErrors = true;
+}
 void deleteSymbs() {
     int newCount = -1;
     for (int i = 0; i < symCount; i++) {
@@ -244,9 +253,32 @@ rtrn        :   RETURN_KW exp_op { $$ = $2; } | RETURN_KW { $$ = 0; };
 
 throw       :   THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT | THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT;
 
-loop        :   FOR_KW LEFT_PARENT /* TODO for iteration */ RIGHT_PARENT std_blck_d
+loop        :   FOR_KW LEFT_PARENT for_decl RIGHT_PARENT std_blck_d
             |   while_exp std_blck_d
             |   DO_KW std_blck_d while_exp;
+
+for_decl    :   for_var COLON for_cond COLON for_sec;
+
+for_var     :   IDENTIFIER OP_ASSIGN exp_op {
+    if ($3 != 2) {
+        printf("Incompatible type error at line %d: the variable used in for iteration is not a int value\n", 
+            lineNumber);
+    } else {
+        addForNumber($1);
+    }
+};
+
+for_cond    :   exp_op {
+    if($1 != 4 ) {
+        printf("Logical error at line %d: the condition used in for iteration is not a bool value\n", 
+            lineNumber);
+        hasErrors = true;
+    }
+};
+
+for_sec     :   for_iter | for_iter COMMA for_sec;
+
+for_iter    :   inc_dec | asingn;
 
 while_exp   :   WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT {
     if ($3 != 4) {

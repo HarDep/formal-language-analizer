@@ -125,7 +125,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 185 "sintax_analizer.y"
+#line 194 "sintax_analizer.y"
 
     int ival;
     char *sval;

@@ -1,0 +1,82 @@
+
+int a = 3
+
+function main() : void {
+    int a = 3
+}
+
+int g = ::a + 5
+
+int jjj
+
+++::a
+
+a *= 2
+
+bool f = true == false
+
+int z = 5
+
+main()
+
+function sum2( x : int = 5, y : int = 0) : int {
+    if (true) {
+        return x
+    }
+    return x + y
+}
+
+//bool a = true
+
+function sum(a:int, 
+            b:int = 2) : int {
+    bool boolv = (!true || false) && false && (5>=5) && (7+8+8)>=0
+    while (boolv) {
+        int c = sum(a: 5, sum2())
+        c=5
+        int x = c+=4 + (c-=5)
+        int m = (-3)+3 * (5-5-5-(5))+ 5 - (-6+8)+2+(++a)
+        int n = (4)
+        a++
+        a--
+        ::a++
+        int t = 8
+    }
+    do {
+        //t++
+    } while (5==4)
+    try {
+
+    } catch (error) {
+
+    }
+    if(a==3){
+        for () {
+            while (true) {
+                throw Exception()
+                if(1==1) {
+                    break
+                }
+            }
+        }
+        throw Exception('aaa')
+    } else if(a==4) {
+
+    } else if(a==5) {
+        
+    } else {
+        
+    }
+    switch (a){
+        case 1:
+        break
+        case 3:
+        break
+        //default:
+    }
+    switch (a){
+        default:
+            break
+    }
+    return 3
+}

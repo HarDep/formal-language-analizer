@@ -382,9 +382,15 @@ var_value   :   IDENTIFIER  { $$ = getSymbType($1, false); }
             |   D_COLON IDENTIFIER { $$ = getGlobalSymbType($2); };
 
 exp_op      :   exp_op OP_ADD exp_op {
-    $1 = $1 == 1 || $1 == 4 ? 5 : $1;
-    $3 = $3 == 1 || $3 == 4 ? 5 : $3;
-    $$ = $1 == 5 || $3 == 5 ? 5 : $1 == 3 || $3 == 3 ? 3 : 2;
+    if ($1 == 4 && $3 == 4) {
+        printf("Logical error at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
+        hasErrors = true;
+        $$ = 0;
+    } else {
+        $1 = $1 == 1 || $1 == 4 ? 5 : $1;
+        $3 = $3 == 1 || $3 == 4 ? 5 : $3;
+        $$ = $1 == 5 || $3 == 5 ? 5 : $1 == 3 || $3 == 3 ? 3 : 2;
+    }
 }
             |   exp_op OP_SUB exp_op { $$ = checkNumsOperation($1, $3); }
             |   exp_op OP_MUL exp_op { $$ = checkNumsOperation($1, $3); }

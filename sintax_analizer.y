@@ -177,11 +177,6 @@ void deleteSymbs() {
         }
     }
     symCount = newCount != -1 ? newCount : symCount;
-    /*printf("---------   simbs length: %d\n", symCount);
-    printf("scope level: %d\n", scopeLevel);
-    for (int i = 0; i < symCount; i++) {
-        printf("simbolo: %s %s %d\n", syms[i].name, syms[i].isFunc?"func":"var",syms[i].scopeLevel);
-    }*/
 }
 void initBlock() {
     scopeLevel++;
@@ -354,10 +349,10 @@ param       :   IDENTIFIER COLON type { addFunctionParam($1, $3); } | IDENTIFIER
 
 instance    :   inst_id | inst_id OP_ASSIGN exp_op {
     if ($1 == 5 && $3 != 5 && $3 != 1) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber);
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
-    } else if ($1 != $3) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber -1);
+    } else if ($1 != $3 && $1 != 5) {
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
     }
 };

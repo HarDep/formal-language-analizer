@@ -247,11 +247,6 @@ void deleteSymbs() {
         }
     }
     symCount = newCount != -1 ? newCount : symCount;
-    /*printf("---------   simbs length: %d\n", symCount);
-    printf("scope level: %d\n", scopeLevel);
-    for (int i = 0; i < symCount; i++) {
-        printf("simbolo: %s %s %d\n", syms[i].name, syms[i].isFunc?"func":"var",syms[i].scopeLevel);
-    }*/
 }
 void initBlock() {
     scopeLevel++;
@@ -261,7 +256,7 @@ void endBlock() {
     scopeLevel--;
 }
 
-#line 265 "sintax_analizer.tab.c"
+#line 260 "sintax_analizer.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -799,20 +794,20 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   213,   213,   213,   215,   215,   217,   217,   217,   217,
-     217,   219,   226,   226,   228,   230,   230,   232,   232,   234,
-     234,   234,   234,   234,   234,   234,   234,   235,   250,   252,
-     252,   254,   254,   256,   257,   258,   260,   262,   262,   264,
-     273,   281,   281,   283,   283,   285,   292,   292,   294,   294,
-     294,   296,   296,   303,   305,   305,   305,   307,   307,   312,
-     314,   314,   326,   326,   327,   327,   337,   337,   339,   341,
-     341,   343,   343,   345,   345,   345,   347,   347,   355,   355,
-     365,   367,   368,   369,   370,   371,   373,   374,   375,   376,
-     377,   378,   379,   381,   382,   384,   395,   396,   397,   398,
-     399,   400,   401,   402,   403,   404,   405,   406,   407,   408,
-     409,   410,   411,   412,   413,   414,   415,   416,   417,   423,
-     425,   425,   427,   427,   429,   430,   432,   432,   432,   434,
-     434,   436,   437,   438,   440,   440,   440,   440
+       0,   208,   208,   208,   210,   210,   212,   212,   212,   212,
+     212,   214,   221,   221,   223,   225,   225,   227,   227,   229,
+     229,   229,   229,   229,   229,   229,   229,   230,   245,   247,
+     247,   249,   249,   251,   252,   253,   255,   257,   257,   259,
+     268,   276,   276,   278,   278,   280,   287,   287,   289,   289,
+     289,   291,   291,   298,   300,   300,   300,   302,   302,   307,
+     309,   309,   321,   321,   322,   322,   332,   332,   334,   336,
+     336,   338,   338,   340,   340,   340,   342,   342,   350,   350,
+     360,   362,   363,   364,   365,   366,   368,   369,   370,   371,
+     372,   373,   374,   376,   377,   379,   390,   391,   392,   393,
+     394,   395,   396,   397,   398,   399,   400,   401,   402,   403,
+     404,   405,   406,   407,   408,   409,   410,   411,   412,   418,
+     420,   420,   422,   422,   424,   425,   427,   427,   427,   429,
+     429,   431,   432,   433,   435,   435,   435,   435
 };
 #endif
 
@@ -1604,36 +1599,36 @@ yyreduce:
   switch (yyn)
     {
   case 11: /* function: func_dec std_blck_d  */
-#line 219 "sintax_analizer.y"
+#line 214 "sintax_analizer.y"
                                     {
     if (functType != 0 && !hasReturn) {
         printf("Logical error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 1615 "sintax_analizer.tab.c"
+#line 1610 "sintax_analizer.tab.c"
     break;
 
   case 12: /* $@1: %empty  */
-#line 226 "sintax_analizer.y"
+#line 221 "sintax_analizer.y"
                              { initBlock(); }
-#line 1621 "sintax_analizer.tab.c"
+#line 1616 "sintax_analizer.tab.c"
     break;
 
   case 13: /* std_blck_d: LEFT_BRACKET $@1 block RIGHT_BRACKET  */
-#line 226 "sintax_analizer.y"
+#line 221 "sintax_analizer.y"
                                                                   { endBlock(); }
-#line 1627 "sintax_analizer.tab.c"
+#line 1622 "sintax_analizer.tab.c"
     break;
 
   case 14: /* func_dec: FUNCTION_KW IDENTIFIER func_params func_type  */
-#line 228 "sintax_analizer.y"
+#line 223 "sintax_analizer.y"
                                                              { addSymb((yyvsp[-2].sval), (yyvsp[0].ival), true); }
-#line 1633 "sintax_analizer.tab.c"
+#line 1628 "sintax_analizer.tab.c"
     break;
 
   case 27: /* block_exp: rtrn  */
-#line 235 "sintax_analizer.y"
+#line 230 "sintax_analizer.y"
                    {
     if (scopeLevel == 1) {
         hasReturn = true;
@@ -1650,23 +1645,23 @@ yyreduce:
         hasErrors = true;
     }
 }
-#line 1654 "sintax_analizer.tab.c"
+#line 1649 "sintax_analizer.tab.c"
     break;
 
   case 29: /* rtrn: RETURN_KW exp_op  */
-#line 252 "sintax_analizer.y"
+#line 247 "sintax_analizer.y"
                                  { (yyval.ival) = (yyvsp[0].ival); }
-#line 1660 "sintax_analizer.tab.c"
+#line 1655 "sintax_analizer.tab.c"
     break;
 
   case 30: /* rtrn: RETURN_KW  */
-#line 252 "sintax_analizer.y"
+#line 247 "sintax_analizer.y"
                                                           { (yyval.ival) = 0; }
-#line 1666 "sintax_analizer.tab.c"
+#line 1661 "sintax_analizer.tab.c"
     break;
 
   case 39: /* for_var: IDENTIFIER OP_ASSIGN exp_op  */
-#line 264 "sintax_analizer.y"
+#line 259 "sintax_analizer.y"
                                             {
     if ((yyvsp[0].ival) != 2) {
         printf("Incompatible type error at line %d: the variable used in for iteration is not a int value\n", 
@@ -1675,11 +1670,11 @@ yyreduce:
         addForNumber((yyvsp[-2].sval));
     }
 }
-#line 1679 "sintax_analizer.tab.c"
+#line 1674 "sintax_analizer.tab.c"
     break;
 
   case 40: /* for_cond: exp_op  */
-#line 273 "sintax_analizer.y"
+#line 268 "sintax_analizer.y"
                        {
     if((yyvsp[0].ival) != 4 ) {
         printf("Logical error at line %d: the condition used in for iteration is not a bool value\n", 
@@ -1687,56 +1682,56 @@ yyreduce:
         hasErrors = true;
     }
 }
-#line 1691 "sintax_analizer.tab.c"
+#line 1686 "sintax_analizer.tab.c"
     break;
 
   case 45: /* while_exp: WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT  */
-#line 285 "sintax_analizer.y"
+#line 280 "sintax_analizer.y"
                                                          {
     if ((yyvsp[-1].ival) != 4) {
         printf("Logical error at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 1702 "sintax_analizer.tab.c"
+#line 1697 "sintax_analizer.tab.c"
     break;
 
   case 51: /* $@2: %empty  */
-#line 296 "sintax_analizer.y"
+#line 291 "sintax_analizer.y"
                                          {
     if ((yyvsp[0].ival) != 4) {
         printf("Logical error at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 1713 "sintax_analizer.tab.c"
+#line 1708 "sintax_analizer.tab.c"
     break;
 
   case 57: /* $@3: %empty  */
-#line 307 "sintax_analizer.y"
+#line 302 "sintax_analizer.y"
                                                                                         {
     if ((yyvsp[-4].ival) != (yyvsp[0].ival) && (yyvsp[0].ival) != 0) {
         printf("Incompatible type error at line %d: the switch cases are not compatible with the switch value type\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 1724 "sintax_analizer.tab.c"
+#line 1719 "sintax_analizer.tab.c"
     break;
 
   case 58: /* switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET  */
-#line 312 "sintax_analizer.y"
+#line 307 "sintax_analizer.y"
                 { hasDefaultCase = false; }
-#line 1730 "sintax_analizer.tab.c"
+#line 1725 "sintax_analizer.tab.c"
     break;
 
   case 60: /* switch_block: switch_line  */
-#line 314 "sintax_analizer.y"
+#line 309 "sintax_analizer.y"
                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 1736 "sintax_analizer.tab.c"
+#line 1731 "sintax_analizer.tab.c"
     break;
 
   case 61: /* switch_block: switch_block switch_line  */
-#line 314 "sintax_analizer.y"
+#line 309 "sintax_analizer.y"
                                                                     {
     (yyvsp[-1].ival) = (yyvsp[-1].ival) == 0 ? (yyvsp[0].ival) : (yyvsp[-1].ival);
     (yyvsp[0].ival) = (yyvsp[0].ival) == 0 ? (yyvsp[-1].ival) : (yyvsp[0].ival);
@@ -1748,29 +1743,29 @@ yyreduce:
         (yyval.ival) = (yyvsp[0].ival);
     }
 }
-#line 1752 "sintax_analizer.tab.c"
+#line 1747 "sintax_analizer.tab.c"
     break;
 
   case 62: /* $@4: %empty  */
-#line 326 "sintax_analizer.y"
+#line 321 "sintax_analizer.y"
                                      { initBlock(); }
-#line 1758 "sintax_analizer.tab.c"
+#line 1753 "sintax_analizer.tab.c"
     break;
 
   case 63: /* switch_line: CASE_KW exp_op COLON $@4 block  */
-#line 326 "sintax_analizer.y"
+#line 321 "sintax_analizer.y"
                                                             { endBlock(); (yyval.ival) = (yyvsp[-3].ival); }
-#line 1764 "sintax_analizer.tab.c"
+#line 1759 "sintax_analizer.tab.c"
     break;
 
   case 64: /* $@5: %empty  */
-#line 327 "sintax_analizer.y"
+#line 322 "sintax_analizer.y"
                                  { initBlock(); }
-#line 1770 "sintax_analizer.tab.c"
+#line 1765 "sintax_analizer.tab.c"
     break;
 
   case 65: /* switch_line: DEFAULT_KW COLON $@5 block  */
-#line 327 "sintax_analizer.y"
+#line 322 "sintax_analizer.y"
                                                         {
     endBlock();
     if (hasDefaultCase) {
@@ -1780,29 +1775,29 @@ yyreduce:
     hasDefaultCase = true;
     (yyval.ival) = 0;
 }
-#line 1784 "sintax_analizer.tab.c"
+#line 1779 "sintax_analizer.tab.c"
     break;
 
   case 69: /* func_type: COLON type  */
-#line 341 "sintax_analizer.y"
+#line 336 "sintax_analizer.y"
                            { functType = (yyvsp[0].ival); hasReturn = false; (yyval.ival) = (yyvsp[0].ival); }
-#line 1790 "sintax_analizer.tab.c"
+#line 1785 "sintax_analizer.tab.c"
     break;
 
   case 70: /* func_type: COLON VOID_KW  */
-#line 341 "sintax_analizer.y"
+#line 336 "sintax_analizer.y"
                                                                                            { functType = 0; (yyval.ival) = 0; }
-#line 1796 "sintax_analizer.tab.c"
+#line 1791 "sintax_analizer.tab.c"
     break;
 
   case 76: /* param: IDENTIFIER COLON type  */
-#line 347 "sintax_analizer.y"
+#line 342 "sintax_analizer.y"
                                       { addFunctionParam((yyvsp[-2].sval), (yyvsp[0].ival)); }
-#line 1802 "sintax_analizer.tab.c"
+#line 1797 "sintax_analizer.tab.c"
     break;
 
   case 77: /* param: IDENTIFIER COLON type OP_ASSIGN exp_op  */
-#line 347 "sintax_analizer.y"
+#line 342 "sintax_analizer.y"
                                                                                                              {
     addFunctionParam((yyvsp[-4].sval), (yyvsp[-2].ival));
     if ((yyvsp[0].ival) != (yyvsp[-2].ival)) {
@@ -1810,115 +1805,115 @@ yyreduce:
         hasErrors = true;
     }
 }
-#line 1814 "sintax_analizer.tab.c"
+#line 1809 "sintax_analizer.tab.c"
     break;
 
   case 79: /* instance: inst_id OP_ASSIGN exp_op  */
-#line 355 "sintax_analizer.y"
+#line 350 "sintax_analizer.y"
                                                    {
     if ((yyvsp[-2].ival) == 5 && (yyvsp[0].ival) != 5 && (yyvsp[0].ival) != 1) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber);
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
-    } else if ((yyvsp[-2].ival) != (yyvsp[0].ival)) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber -1);
+    } else if ((yyvsp[-2].ival) != (yyvsp[0].ival) && (yyvsp[-2].ival) != 5) {
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
     }
 }
-#line 1828 "sintax_analizer.tab.c"
+#line 1823 "sintax_analizer.tab.c"
     break;
 
   case 80: /* inst_id: type IDENTIFIER  */
-#line 365 "sintax_analizer.y"
+#line 360 "sintax_analizer.y"
                                 { addSymb((yyvsp[0].sval), (yyvsp[-1].ival), false); (yyval.ival) = (yyvsp[-1].ival); }
-#line 1834 "sintax_analizer.tab.c"
+#line 1829 "sintax_analizer.tab.c"
     break;
 
   case 81: /* type: CHAR_KW  */
-#line 367 "sintax_analizer.y"
+#line 362 "sintax_analizer.y"
                             { (yyval.ival) = 1; }
-#line 1840 "sintax_analizer.tab.c"
+#line 1835 "sintax_analizer.tab.c"
     break;
 
   case 82: /* type: INT_KW  */
-#line 368 "sintax_analizer.y"
+#line 363 "sintax_analizer.y"
                             { (yyval.ival) = 2; }
-#line 1846 "sintax_analizer.tab.c"
+#line 1841 "sintax_analizer.tab.c"
     break;
 
   case 83: /* type: FLOAT_KW  */
-#line 369 "sintax_analizer.y"
+#line 364 "sintax_analizer.y"
                             { (yyval.ival) = 3; }
-#line 1852 "sintax_analizer.tab.c"
+#line 1847 "sintax_analizer.tab.c"
     break;
 
   case 84: /* type: BOOL_KW  */
-#line 370 "sintax_analizer.y"
+#line 365 "sintax_analizer.y"
                             { (yyval.ival) = 4; }
-#line 1858 "sintax_analizer.tab.c"
+#line 1853 "sintax_analizer.tab.c"
     break;
 
   case 85: /* type: STRING_KW  */
-#line 371 "sintax_analizer.y"
+#line 366 "sintax_analizer.y"
                             { (yyval.ival) = 5; }
-#line 1864 "sintax_analizer.tab.c"
+#line 1859 "sintax_analizer.tab.c"
     break;
 
   case 86: /* value_data: CHAR  */
-#line 373 "sintax_analizer.y"
+#line 368 "sintax_analizer.y"
                             { (yyval.ival) = 1; }
-#line 1870 "sintax_analizer.tab.c"
+#line 1865 "sintax_analizer.tab.c"
     break;
 
   case 87: /* value_data: NUM  */
-#line 374 "sintax_analizer.y"
+#line 369 "sintax_analizer.y"
                             { (yyval.ival) = 2; }
-#line 1876 "sintax_analizer.tab.c"
+#line 1871 "sintax_analizer.tab.c"
     break;
 
   case 88: /* value_data: NUM_DEC  */
-#line 375 "sintax_analizer.y"
+#line 370 "sintax_analizer.y"
                             { (yyval.ival) = 3; }
-#line 1882 "sintax_analizer.tab.c"
+#line 1877 "sintax_analizer.tab.c"
     break;
 
   case 89: /* value_data: TRUE_KW  */
-#line 376 "sintax_analizer.y"
+#line 371 "sintax_analizer.y"
                             { (yyval.ival) = 4; }
-#line 1888 "sintax_analizer.tab.c"
+#line 1883 "sintax_analizer.tab.c"
     break;
 
   case 90: /* value_data: FALSE_KW  */
-#line 377 "sintax_analizer.y"
+#line 372 "sintax_analizer.y"
                             { (yyval.ival) = 4; }
-#line 1894 "sintax_analizer.tab.c"
+#line 1889 "sintax_analizer.tab.c"
     break;
 
   case 91: /* value_data: STRING  */
-#line 378 "sintax_analizer.y"
+#line 373 "sintax_analizer.y"
                             { (yyval.ival) = 5; }
-#line 1900 "sintax_analizer.tab.c"
+#line 1895 "sintax_analizer.tab.c"
     break;
 
   case 92: /* value_data: var_value  */
-#line 379 "sintax_analizer.y"
+#line 374 "sintax_analizer.y"
                             { (yyval.ival) = (yyvsp[0].ival); }
-#line 1906 "sintax_analizer.tab.c"
+#line 1901 "sintax_analizer.tab.c"
     break;
 
   case 93: /* var_value: IDENTIFIER  */
-#line 381 "sintax_analizer.y"
+#line 376 "sintax_analizer.y"
                             { (yyval.ival) = getSymbType((yyvsp[0].sval), false); }
-#line 1912 "sintax_analizer.tab.c"
+#line 1907 "sintax_analizer.tab.c"
     break;
 
   case 94: /* var_value: D_COLON IDENTIFIER  */
-#line 382 "sintax_analizer.y"
+#line 377 "sintax_analizer.y"
                                    { (yyval.ival) = getGlobalSymbType((yyvsp[0].sval)); }
-#line 1918 "sintax_analizer.tab.c"
+#line 1913 "sintax_analizer.tab.c"
     break;
 
   case 95: /* exp_op: exp_op OP_ADD exp_op  */
-#line 384 "sintax_analizer.y"
+#line 379 "sintax_analizer.y"
                                      {
     if ((yyvsp[-2].ival) == 4 && (yyvsp[0].ival) == 4) {
         printf("Logical error at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
@@ -1930,202 +1925,202 @@ yyreduce:
         (yyval.ival) = (yyvsp[-2].ival) == 5 || (yyvsp[0].ival) == 5 ? 5 : (yyvsp[-2].ival) == 3 || (yyvsp[0].ival) == 3 ? 3 : 2;
     }
 }
-#line 1934 "sintax_analizer.tab.c"
+#line 1929 "sintax_analizer.tab.c"
     break;
 
   case 96: /* exp_op: exp_op OP_SUB exp_op  */
-#line 395 "sintax_analizer.y"
+#line 390 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1940 "sintax_analizer.tab.c"
+#line 1935 "sintax_analizer.tab.c"
     break;
 
   case 97: /* exp_op: exp_op OP_MUL exp_op  */
-#line 396 "sintax_analizer.y"
+#line 391 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1946 "sintax_analizer.tab.c"
+#line 1941 "sintax_analizer.tab.c"
     break;
 
   case 98: /* exp_op: exp_op OP_DIV exp_op  */
-#line 397 "sintax_analizer.y"
+#line 392 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1952 "sintax_analizer.tab.c"
+#line 1947 "sintax_analizer.tab.c"
     break;
 
   case 99: /* exp_op: exp_op OP_MOD exp_op  */
-#line 398 "sintax_analizer.y"
+#line 393 "sintax_analizer.y"
                                      { (yyval.ival) = checkNumsOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1958 "sintax_analizer.tab.c"
+#line 1953 "sintax_analizer.tab.c"
     break;
 
   case 100: /* exp_op: OP_SUB exp_op  */
-#line 399 "sintax_analizer.y"
+#line 394 "sintax_analizer.y"
                                            { (yyval.ival) = checkNumsOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
-#line 1964 "sintax_analizer.tab.c"
+#line 1959 "sintax_analizer.tab.c"
     break;
 
   case 101: /* exp_op: exp_op OP_GT exp_op  */
-#line 400 "sintax_analizer.y"
+#line 395 "sintax_analizer.y"
                                     { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1970 "sintax_analizer.tab.c"
+#line 1965 "sintax_analizer.tab.c"
     break;
 
   case 102: /* exp_op: exp_op OP_LT exp_op  */
-#line 401 "sintax_analizer.y"
+#line 396 "sintax_analizer.y"
                                     { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1976 "sintax_analizer.tab.c"
+#line 1971 "sintax_analizer.tab.c"
     break;
 
   case 103: /* exp_op: exp_op OP_GTE exp_op  */
-#line 402 "sintax_analizer.y"
+#line 397 "sintax_analizer.y"
                                      { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1982 "sintax_analizer.tab.c"
+#line 1977 "sintax_analizer.tab.c"
     break;
 
   case 104: /* exp_op: exp_op OP_LTE exp_op  */
-#line 403 "sintax_analizer.y"
+#line 398 "sintax_analizer.y"
                                      { (yyval.ival) = checkComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1988 "sintax_analizer.tab.c"
+#line 1983 "sintax_analizer.tab.c"
     break;
 
   case 105: /* exp_op: exp_op OP_EQ exp_op  */
-#line 404 "sintax_analizer.y"
+#line 399 "sintax_analizer.y"
                                     { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 1994 "sintax_analizer.tab.c"
+#line 1989 "sintax_analizer.tab.c"
     break;
 
   case 106: /* exp_op: exp_op OP_NEQ exp_op  */
-#line 405 "sintax_analizer.y"
+#line 400 "sintax_analizer.y"
                                      { (yyval.ival) = checkValuesComparison((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2000 "sintax_analizer.tab.c"
+#line 1995 "sintax_analizer.tab.c"
     break;
 
   case 107: /* exp_op: exp_op OP_AND exp_op  */
-#line 406 "sintax_analizer.y"
+#line 401 "sintax_analizer.y"
                                      { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2006 "sintax_analizer.tab.c"
+#line 2001 "sintax_analizer.tab.c"
     break;
 
   case 108: /* exp_op: exp_op OP_OR exp_op  */
-#line 407 "sintax_analizer.y"
+#line 402 "sintax_analizer.y"
                                     { (yyval.ival) = checkLogicOperation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2012 "sintax_analizer.tab.c"
+#line 2007 "sintax_analizer.tab.c"
     break;
 
   case 109: /* exp_op: OP_NOT exp_op  */
-#line 408 "sintax_analizer.y"
+#line 403 "sintax_analizer.y"
                               { (yyval.ival) = checkLogicOperation((yyvsp[0].ival), (yyvsp[0].ival)); }
-#line 2018 "sintax_analizer.tab.c"
+#line 2013 "sintax_analizer.tab.c"
     break;
 
   case 110: /* exp_op: var_value OP_ASSIGN exp_op  */
-#line 409 "sintax_analizer.y"
+#line 404 "sintax_analizer.y"
                                            { (yyval.ival) = singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2024 "sintax_analizer.tab.c"
+#line 2019 "sintax_analizer.tab.c"
     break;
 
   case 111: /* exp_op: var_value OP_ADD_ASSIGN exp_op  */
-#line 410 "sintax_analizer.y"
+#line 405 "sintax_analizer.y"
                                                { (yyval.ival) = checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2030 "sintax_analizer.tab.c"
+#line 2025 "sintax_analizer.tab.c"
     break;
 
   case 112: /* exp_op: var_value OP_SUB_ASSIGN exp_op  */
-#line 411 "sintax_analizer.y"
+#line 406 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2036 "sintax_analizer.tab.c"
+#line 2031 "sintax_analizer.tab.c"
     break;
 
   case 113: /* exp_op: var_value OP_MUL_ASSIGN exp_op  */
-#line 412 "sintax_analizer.y"
+#line 407 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2042 "sintax_analizer.tab.c"
+#line 2037 "sintax_analizer.tab.c"
     break;
 
   case 114: /* exp_op: var_value OP_DIV_ASSIGN exp_op  */
-#line 413 "sintax_analizer.y"
+#line 408 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2048 "sintax_analizer.tab.c"
+#line 2043 "sintax_analizer.tab.c"
     break;
 
   case 115: /* exp_op: var_value OP_MOD_ASSIGN exp_op  */
-#line 414 "sintax_analizer.y"
+#line 409 "sintax_analizer.y"
                                                { (yyval.ival) = checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2054 "sintax_analizer.tab.c"
+#line 2049 "sintax_analizer.tab.c"
     break;
 
   case 116: /* exp_op: LEFT_PARENT exp_op RIGHT_PARENT  */
-#line 415 "sintax_analizer.y"
+#line 410 "sintax_analizer.y"
                                                 { (yyval.ival) = (yyvsp[-1].ival); }
-#line 2060 "sintax_analizer.tab.c"
+#line 2055 "sintax_analizer.tab.c"
     break;
 
   case 117: /* exp_op: value_data  */
-#line 416 "sintax_analizer.y"
+#line 411 "sintax_analizer.y"
                            { (yyval.ival) = (yyvsp[0].ival); }
-#line 2066 "sintax_analizer.tab.c"
+#line 2061 "sintax_analizer.tab.c"
     break;
 
   case 118: /* exp_op: func_call  */
-#line 417 "sintax_analizer.y"
+#line 412 "sintax_analizer.y"
                           { (yyval.ival) = (yyvsp[0].ival);
     if ((yyvsp[0].ival) == 0) {
         printf("Logical error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 2077 "sintax_analizer.tab.c"
+#line 2072 "sintax_analizer.tab.c"
     break;
 
   case 119: /* exp_op: inc_dec  */
-#line 423 "sintax_analizer.y"
+#line 418 "sintax_analizer.y"
                         { (yyval.ival) = (yyvsp[0].ival); }
-#line 2083 "sintax_analizer.tab.c"
+#line 2078 "sintax_analizer.tab.c"
     break;
 
   case 120: /* inc_dec: var_value ops_inc_dec  */
-#line 425 "sintax_analizer.y"
+#line 420 "sintax_analizer.y"
                                       { (yyval.ival) = checkIncrementDecrement((yyvsp[-1].ival)); }
-#line 2089 "sintax_analizer.tab.c"
+#line 2084 "sintax_analizer.tab.c"
     break;
 
   case 121: /* inc_dec: ops_inc_dec var_value  */
-#line 425 "sintax_analizer.y"
+#line 420 "sintax_analizer.y"
                                                                                                     { (yyval.ival) = checkIncrementDecrement((yyvsp[0].ival)); }
-#line 2095 "sintax_analizer.tab.c"
+#line 2090 "sintax_analizer.tab.c"
     break;
 
   case 124: /* func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT  */
-#line 429 "sintax_analizer.y"
+#line 424 "sintax_analizer.y"
                                                     { (yyval.ival) = getSymbType((yyvsp[-2].sval), true); }
-#line 2101 "sintax_analizer.tab.c"
+#line 2096 "sintax_analizer.tab.c"
     break;
 
   case 125: /* func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT  */
-#line 430 "sintax_analizer.y"
+#line 425 "sintax_analizer.y"
                                                               { (yyval.ival) = getSymbType((yyvsp[-3].sval), true); }
-#line 2107 "sintax_analizer.tab.c"
+#line 2102 "sintax_analizer.tab.c"
     break;
 
   case 131: /* asingn: var_value OP_ASSIGN exp_op  */
-#line 436 "sintax_analizer.y"
+#line 431 "sintax_analizer.y"
                                            { singleAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2113 "sintax_analizer.tab.c"
+#line 2108 "sintax_analizer.tab.c"
     break;
 
   case 132: /* asingn: var_value OP_ADD_ASSIGN exp_op  */
-#line 437 "sintax_analizer.y"
+#line 432 "sintax_analizer.y"
                                                { checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2119 "sintax_analizer.tab.c"
+#line 2114 "sintax_analizer.tab.c"
     break;
 
   case 133: /* asingn: var_value ops_assign exp_op  */
-#line 438 "sintax_analizer.y"
+#line 433 "sintax_analizer.y"
                                             { checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
-#line 2125 "sintax_analizer.tab.c"
+#line 2120 "sintax_analizer.tab.c"
     break;
 
 
-#line 2129 "sintax_analizer.tab.c"
+#line 2124 "sintax_analizer.tab.c"
 
       default: break;
     }
@@ -2318,7 +2313,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 441 "sintax_analizer.y"
+#line 436 "sintax_analizer.y"
 
 
 void yyerror() {

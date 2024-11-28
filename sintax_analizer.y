@@ -257,7 +257,9 @@ loop        :   FOR_KW LEFT_PARENT for_decl RIGHT_PARENT std_blck_d
             |   while_exp std_blck_d
             |   DO_KW std_blck_d while_exp;
 
-for_decl    :   for_var COLON for_cond COLON for_sec;
+for_decl    :   for_vrs_dec COLON for_cond COLON for_sec;
+
+for_vrs_dec :   for_var | for_var COMMA for_vrs_dec;
 
 for_var     :   IDENTIFIER OP_ASSIGN exp_op {
     if ($3 != 2) {

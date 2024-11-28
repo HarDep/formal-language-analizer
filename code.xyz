@@ -51,7 +51,7 @@ function sum(a:int,
 
     }
     if(a==3){
-        for (i = 2: i < 5: i++) {
+        for (i = 2, u = 9: i < 5: i++, u += 2) {
             while (true) {
                 throw Exception()
                 if(1==1) {

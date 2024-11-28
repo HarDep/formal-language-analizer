@@ -57,212 +57,215 @@ Gramática
    33     | while_exp std_blck_d
    34     | DO_KW std_blck_d while_exp
 
-   35 for_decl: for_var COLON for_cond COLON for_sec
+   35 for_decl: for_vrs_dec COLON for_cond COLON for_sec
 
-   36 for_var: IDENTIFIER OP_ASSIGN exp_op
+   36 for_vrs_dec: for_var
+   37            | for_var COMMA for_vrs_dec
 
-   37 for_cond: exp_op
+   38 for_var: IDENTIFIER OP_ASSIGN exp_op
 
-   38 for_sec: for_iter
-   39        | for_iter COMMA for_sec
+   39 for_cond: exp_op
 
-   40 for_iter: inc_dec
-   41         | asingn
+   40 for_sec: for_iter
+   41        | for_iter COMMA for_sec
 
-   42 while_exp: WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT
+   42 for_iter: inc_dec
+   43         | asingn
 
-   43 conditional: if_els_stmt
-   44            | switch_stmt
+   44 while_exp: WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT
 
-   45 if_els_stmt: if_stmt
-   46            | if_stmt else_stmt
-   47            | if_stmt els_if_stmt
+   45 conditional: if_els_stmt
+   46            | switch_stmt
 
-   48 $@2: ε
+   47 if_els_stmt: if_stmt
+   48            | if_stmt else_stmt
+   49            | if_stmt els_if_stmt
 
-   49 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d
+   50 $@2: ε
 
-   50 else_stmt: ELSE_KW std_blck_d
+   51 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d
 
-   51 els_if_stmt: ELSE_KW if_stmt
-   52            | els_if_stmt ELSE_KW if_stmt
-   53            | els_if_stmt else_stmt
+   52 else_stmt: ELSE_KW std_blck_d
 
-   54 $@3: ε
+   53 els_if_stmt: ELSE_KW if_stmt
+   54            | els_if_stmt ELSE_KW if_stmt
+   55            | els_if_stmt else_stmt
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
+   56 $@3: ε
 
-   57 switch_block: switch_line
-   58             | switch_block switch_line
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
 
-   59 $@4: ε
+   59 switch_block: switch_line
+   60             | switch_block switch_line
 
-   60 switch_line: CASE_KW exp_op COLON $@4 block
+   61 $@4: ε
 
-   61 $@5: ε
+   62 switch_line: CASE_KW exp_op COLON $@4 block
 
-   62 switch_line: DEFAULT_KW COLON $@5 block
+   63 $@5: ε
 
-   63 exception: try_catch
-   64          | try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET
+   64 switch_line: DEFAULT_KW COLON $@5 block
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   65 exception: try_catch
+   66          | try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET
 
-   66 func_type: COLON type
-   67          | COLON VOID_KW
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
 
-   68 func_params: LEFT_PARENT params_sec RIGHT_PARENT
-   69            | LEFT_PARENT RIGHT_PARENT
+   68 func_type: COLON type
+   69          | COLON VOID_KW
 
-   70 params_sec: param
-   71           | param COMMA params_sec
-   72           | param COMMA EOL params_sec
+   70 func_params: LEFT_PARENT params_sec RIGHT_PARENT
+   71            | LEFT_PARENT RIGHT_PARENT
 
-   73 param: IDENTIFIER COLON type
-   74      | IDENTIFIER COLON type OP_ASSIGN exp_op
+   72 params_sec: param
+   73           | param COMMA params_sec
+   74           | param COMMA EOL params_sec
 
-   75 instance: inst_id
-   76         | inst_id OP_ASSIGN exp_op
+   75 param: IDENTIFIER COLON type
+   76      | IDENTIFIER COLON type OP_ASSIGN exp_op
 
-   77 inst_id: type IDENTIFIER
+   77 instance: inst_id
+   78         | inst_id OP_ASSIGN exp_op
 
-   78 type: CHAR_KW
-   79     | INT_KW
-   80     | FLOAT_KW
-   81     | BOOL_KW
-   82     | STRING_KW
+   79 inst_id: type IDENTIFIER
 
-   83 value_data: CHAR
-   84           | NUM
-   85           | NUM_DEC
-   86           | TRUE_KW
-   87           | FALSE_KW
-   88           | STRING
-   89           | var_value
+   80 type: CHAR_KW
+   81     | INT_KW
+   82     | FLOAT_KW
+   83     | BOOL_KW
+   84     | STRING_KW
 
-   90 var_value: IDENTIFIER
-   91          | D_COLON IDENTIFIER
+   85 value_data: CHAR
+   86           | NUM
+   87           | NUM_DEC
+   88           | TRUE_KW
+   89           | FALSE_KW
+   90           | STRING
+   91           | var_value
 
-   92 exp_op: exp_op OP_ADD exp_op
-   93       | exp_op OP_SUB exp_op
-   94       | exp_op OP_MUL exp_op
-   95       | exp_op OP_DIV exp_op
-   96       | exp_op OP_MOD exp_op
-   97       | OP_SUB exp_op
-   98       | exp_op OP_GT exp_op
-   99       | exp_op OP_LT exp_op
-  100       | exp_op OP_GTE exp_op
-  101       | exp_op OP_LTE exp_op
-  102       | exp_op OP_EQ exp_op
-  103       | exp_op OP_NEQ exp_op
-  104       | exp_op OP_AND exp_op
-  105       | exp_op OP_OR exp_op
-  106       | OP_NOT exp_op
-  107       | var_value OP_ASSIGN exp_op
-  108       | var_value OP_ADD_ASSIGN exp_op
-  109       | var_value OP_SUB_ASSIGN exp_op
-  110       | var_value OP_MUL_ASSIGN exp_op
-  111       | var_value OP_DIV_ASSIGN exp_op
-  112       | var_value OP_MOD_ASSIGN exp_op
-  113       | LEFT_PARENT exp_op RIGHT_PARENT
-  114       | value_data
-  115       | func_call
-  116       | inc_dec
+   92 var_value: IDENTIFIER
+   93          | D_COLON IDENTIFIER
 
-  117 inc_dec: var_value ops_inc_dec
-  118        | ops_inc_dec var_value
+   94 exp_op: exp_op OP_ADD exp_op
+   95       | exp_op OP_SUB exp_op
+   96       | exp_op OP_MUL exp_op
+   97       | exp_op OP_DIV exp_op
+   98       | exp_op OP_MOD exp_op
+   99       | OP_SUB exp_op
+  100       | exp_op OP_GT exp_op
+  101       | exp_op OP_LT exp_op
+  102       | exp_op OP_GTE exp_op
+  103       | exp_op OP_LTE exp_op
+  104       | exp_op OP_EQ exp_op
+  105       | exp_op OP_NEQ exp_op
+  106       | exp_op OP_AND exp_op
+  107       | exp_op OP_OR exp_op
+  108       | OP_NOT exp_op
+  109       | var_value OP_ASSIGN exp_op
+  110       | var_value OP_ADD_ASSIGN exp_op
+  111       | var_value OP_SUB_ASSIGN exp_op
+  112       | var_value OP_MUL_ASSIGN exp_op
+  113       | var_value OP_DIV_ASSIGN exp_op
+  114       | var_value OP_MOD_ASSIGN exp_op
+  115       | LEFT_PARENT exp_op RIGHT_PARENT
+  116       | value_data
+  117       | func_call
+  118       | inc_dec
 
-  119 ops_inc_dec: OP_INC
-  120            | OP_DEC
+  119 inc_dec: var_value ops_inc_dec
+  120        | ops_inc_dec var_value
 
-  121 func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT
-  122          | IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT
+  121 ops_inc_dec: OP_INC
+  122            | OP_DEC
 
-  123 func_args: func_arg
-  124          | func_arg COMMA func_args
-  125          | func_arg COMMA EOL func_args
+  123 func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT
+  124          | IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT
 
-  126 func_arg: IDENTIFIER COLON exp_op
-  127         | exp_op
+  125 func_args: func_arg
+  126          | func_arg COMMA func_args
+  127          | func_arg COMMA EOL func_args
 
-  128 asingn: var_value OP_ASSIGN exp_op
-  129       | var_value OP_ADD_ASSIGN exp_op
-  130       | var_value ops_assign exp_op
+  128 func_arg: IDENTIFIER COLON exp_op
+  129         | exp_op
 
-  131 ops_assign: OP_SUB_ASSIGN
-  132           | OP_MUL_ASSIGN
-  133           | OP_DIV_ASSIGN
-  134           | OP_MOD_ASSIGN
+  130 asingn: var_value OP_ASSIGN exp_op
+  131       | var_value OP_ADD_ASSIGN exp_op
+  132       | var_value ops_assign exp_op
+
+  133 ops_assign: OP_SUB_ASSIGN
+  134           | OP_MUL_ASSIGN
+  135           | OP_DIV_ASSIGN
+  136           | OP_MOD_ASSIGN
 
 
 Terminales con las reglas donde aparecen
 
     $end (0) 0
     error (256)
-    CHAR_KW (258) 78
-    INT_KW (259) 79
-    FLOAT_KW (260) 80
-    BOOL_KW (261) 81
-    STRING_KW (262) 82
-    VOID_KW (263) 67
-    IF_KW (264) 49
-    ELSE_KW (265) 50 51 52
-    SWITCH_KW (266) 55 56
-    CASE_KW (267) 60
-    DEFAULT_KW (268) 62
+    CHAR_KW (258) 80
+    INT_KW (259) 81
+    FLOAT_KW (260) 82
+    BOOL_KW (261) 83
+    STRING_KW (262) 84
+    VOID_KW (263) 69
+    IF_KW (264) 51
+    ELSE_KW (265) 52 53 54
+    SWITCH_KW (266) 57 58
+    CASE_KW (267) 62
+    DEFAULT_KW (268) 64
     FOR_KW (269) 32
-    WHILE_KW (270) 42
+    WHILE_KW (270) 44
     DO_KW (271) 34
     BREAK_KW (272) 19
     RETURN_KW (273) 28 29
-    TRUE_KW (274) 86
-    FALSE_KW (275) 87
+    TRUE_KW (274) 88
+    FALSE_KW (275) 89
     FUNCTION_KW (276) 13
-    TRY_KW (277) 65
-    CATCH_KW (278) 65
-    FINALLY_KW (279) 64
+    TRY_KW (277) 67
+    CATCH_KW (278) 67
+    FINALLY_KW (279) 66
     THROW_KW (280) 30 31
     NULL_KW (281)
-    OP_INC (282) 119
-    OP_DEC (283) 120
-    OP_ADD (284) 92
-    OP_SUB (285) 93 97
-    OP_MUL (286) 94
-    OP_DIV (287) 95
-    OP_MOD (288) 96
-    OP_AND (289) 104
-    OP_OR (290) 105
-    OP_NOT (291) 106
-    OP_EQ (292) 102
-    OP_NEQ (293) 103
-    OP_GT (294) 98
-    OP_LT (295) 99
-    OP_GTE (296) 100
-    OP_LTE (297) 101
-    OP_ASSIGN (298) 36 74 76 107 128
-    OP_ADD_ASSIGN (299) 108 129
-    OP_SUB_ASSIGN (300) 109 131
-    OP_MUL_ASSIGN (301) 110 132
-    OP_DIV_ASSIGN (302) 111 133
-    OP_MOD_ASSIGN (303) 112 134
+    OP_INC (282) 121
+    OP_DEC (283) 122
+    OP_ADD (284) 94
+    OP_SUB (285) 95 99
+    OP_MUL (286) 96
+    OP_DIV (287) 97
+    OP_MOD (288) 98
+    OP_AND (289) 106
+    OP_OR (290) 107
+    OP_NOT (291) 108
+    OP_EQ (292) 104
+    OP_NEQ (293) 105
+    OP_GT (294) 100
+    OP_LT (295) 101
+    OP_GTE (296) 102
+    OP_LTE (297) 103
+    OP_ASSIGN (298) 38 76 78 109 130
+    OP_ADD_ASSIGN (299) 110 131
+    OP_SUB_ASSIGN (300) 111 133
+    OP_MUL_ASSIGN (301) 112 134
+    OP_DIV_ASSIGN (302) 113 135
+    OP_MOD_ASSIGN (303) 114 136
     UMINUS (304)
-    LEFT_PARENT (305) 30 31 32 42 49 55 56 65 68 69 113 121 122
-    RIGHT_PARENT (306) 30 31 32 42 49 55 56 65 68 69 113 121 122
-    LEFT_BRACKET (307) 12 55 56 64 65
-    RIGHT_BRACKET (308) 12 55 56 64 65
+    LEFT_PARENT (305) 30 31 32 44 51 57 58 67 70 71 115 123 124
+    RIGHT_PARENT (306) 30 31 32 44 51 57 58 67 70 71 115 123 124
+    LEFT_BRACKET (307) 12 57 58 66 67
+    RIGHT_BRACKET (308) 12 57 58 66 67
     LEFT_SQUARE (309)
     RIGHT_SQUARE (310)
-    COMMA (311) 39 71 72 124 125
+    COMMA (311) 37 41 73 74 126 127
     DOT (312)
-    D_COLON (313) 91
-    COLON (314) 35 60 62 66 67 73 74 126
-    CHAR <ival> (315) 83
-    STRING <ival> (316) 30 88
-    NUM <ival> (317) 84
-    NUM_DEC <ival> (318) 85
-    IDENTIFIER <sval> (319) 13 30 31 36 65 73 74 77 90 91 121 122 126
-    EOL (320) 3 4 16 17 55 56 72 125
+    D_COLON (313) 93
+    COLON (314) 35 62 64 68 69 75 76 128
+    CHAR <ival> (315) 85
+    STRING <ival> (316) 30 90
+    NUM <ival> (317) 86
+    NUM_DEC <ival> (318) 87
+    IDENTIFIER <sval> (319) 13 30 31 38 67 75 76 79 92 93 123 124 128
+    EOL (320) 3 4 16 17 57 58 74 127
 
 
 No terminales con las reglas donde aparecen
@@ -283,7 +286,7 @@ No terminales con las reglas donde aparecen
         on right: 6
     std_blck_d (71)
         on left: 12
-        on right: 10 32 33 34 49 50
+        on right: 10 32 33 34 51 52
     $@1 (72)
         on left: 11
         on right: 12
@@ -292,7 +295,7 @@ No terminales con las reglas donde aparecen
         on right: 10
     block (74)
         on left: 14 15
-        on right: 12 15 60 62 64 65
+        on right: 12 15 62 64 66 67
     block_line (75)
         on left: 16 17
         on right: 15
@@ -311,114 +314,117 @@ No terminales con las reglas donde aparecen
     for_decl (80)
         on left: 35
         on right: 32
-    for_var (81)
-        on left: 36
+    for_vrs_dec (81)
+        on left: 36 37
+        on right: 35 37
+    for_var (82)
+        on left: 38
+        on right: 36 37
+    for_cond (83)
+        on left: 39
         on right: 35
-    for_cond (82)
-        on left: 37
-        on right: 35
-    for_sec (83)
-        on left: 38 39
-        on right: 35 39
-    for_iter (84)
+    for_sec (84)
         on left: 40 41
-        on right: 38 39
-    while_exp (85)
-        on left: 42
+        on right: 35 41
+    for_iter (85)
+        on left: 42 43
+        on right: 40 41
+    while_exp (86)
+        on left: 44
         on right: 33 34
-    conditional (86)
-        on left: 43 44
+    conditional (87)
+        on left: 45 46
         on right: 24
-    if_els_stmt (87)
-        on left: 45 46 47
-        on right: 43
-    if_stmt (88)
-        on left: 49
-        on right: 45 46 47 51 52
-    $@2 (89)
-        on left: 48
-        on right: 49
-    else_stmt (90)
+    if_els_stmt (88)
+        on left: 47 48 49
+        on right: 45
+    if_stmt (89)
+        on left: 51
+        on right: 47 48 49 53 54
+    $@2 (90)
         on left: 50
-        on right: 46 53
-    els_if_stmt (91)
-        on left: 51 52 53
-        on right: 47 52 53
-    switch_stmt (92)
-        on left: 55 56
-        on right: 44
-    $@3 (93)
-        on left: 54
-        on right: 55
-    switch_block <ival> (94)
+        on right: 51
+    else_stmt (91)
+        on left: 52
+        on right: 48 55
+    els_if_stmt (92)
+        on left: 53 54 55
+        on right: 49 54 55
+    switch_stmt (93)
         on left: 57 58
-        on right: 55 58
-    switch_line <ival> (95)
-        on left: 60 62
-        on right: 57 58
-    $@4 (96)
-        on left: 59
-        on right: 60
-    $@5 (97)
+        on right: 46
+    $@3 (94)
+        on left: 56
+        on right: 57
+    switch_block <ival> (95)
+        on left: 59 60
+        on right: 57 60
+    switch_line <ival> (96)
+        on left: 62 64
+        on right: 59 60
+    $@4 (97)
         on left: 61
         on right: 62
-    exception (98)
-        on left: 63 64
+    $@5 (98)
+        on left: 63
+        on right: 64
+    exception (99)
+        on left: 65 66
         on right: 25
-    try_catch (99)
-        on left: 65
-        on right: 63 64
-    func_type <ival> (100)
-        on left: 66 67
-        on right: 13
-    func_params (101)
+    try_catch (100)
+        on left: 67
+        on right: 65 66
+    func_type <ival> (101)
         on left: 68 69
         on right: 13
-    params_sec (102)
-        on left: 70 71 72
-        on right: 68 71 72
-    param (103)
-        on left: 73 74
-        on right: 70 71 72
-    instance (104)
+    func_params (102)
+        on left: 70 71
+        on right: 13
+    params_sec (103)
+        on left: 72 73 74
+        on right: 70 73 74
+    param (104)
         on left: 75 76
+        on right: 72 73 74
+    instance (105)
+        on left: 77 78
         on right: 5 18
-    inst_id <ival> (105)
-        on left: 77
-        on right: 75 76
-    type <ival> (106)
-        on left: 78 79 80 81 82
-        on right: 66 73 74 77
-    value_data <ival> (107)
-        on left: 83 84 85 86 87 88 89
-        on right: 114
-    var_value <ival> (108)
-        on left: 90 91
-        on right: 89 107 108 109 110 111 112 117 118 128 129 130
-    exp_op <ival> (109)
-        on left: 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116
-        on right: 28 36 37 42 49 55 56 60 74 76 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 126 127 128 129 130
-    inc_dec <ival> (110)
-        on left: 117 118
-        on right: 7 20 40 116
-    ops_inc_dec (111)
+    inst_id <ival> (106)
+        on left: 79
+        on right: 77 78
+    type <ival> (107)
+        on left: 80 81 82 83 84
+        on right: 68 75 76 79
+    value_data <ival> (108)
+        on left: 85 86 87 88 89 90 91
+        on right: 116
+    var_value <ival> (109)
+        on left: 92 93
+        on right: 91 109 110 111 112 113 114 119 120 130 131 132
+    exp_op <ival> (110)
+        on left: 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118
+        on right: 28 38 39 44 51 57 58 62 76 78 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 128 129 130 131 132
+    inc_dec <ival> (111)
         on left: 119 120
-        on right: 117 118
-    func_call <ival> (112)
+        on right: 7 20 42 118
+    ops_inc_dec (112)
         on left: 121 122
-        on right: 8 21 115
-    func_args (113)
-        on left: 123 124 125
-        on right: 122 124 125
-    func_arg (114)
-        on left: 126 127
-        on right: 123 124 125
-    asingn (115)
-        on left: 128 129 130
-        on right: 9 22 41
-    ops_assign (116)
-        on left: 131 132 133 134
-        on right: 130
+        on right: 119 120
+    func_call <ival> (113)
+        on left: 123 124
+        on right: 8 21 117
+    func_args (114)
+        on left: 125 126 127
+        on right: 124 126 127
+    func_arg (115)
+        on left: 128 129
+        on right: 125 126 127
+    asingn (116)
+        on left: 130 131 132
+        on right: 9 22 43
+    ops_assign (117)
+        on left: 133 134 135 136
+        on right: 132
 
 
 Estado 0
@@ -471,37 +477,37 @@ Estado 2
 
 Estado 3
 
-   78 type: CHAR_KW •
-
-    $default  reduce usando la regla 78 (type)
-
-
-Estado 4
-
-   79 type: INT_KW •
-
-    $default  reduce usando la regla 79 (type)
-
-
-Estado 5
-
-   80 type: FLOAT_KW •
+   80 type: CHAR_KW •
 
     $default  reduce usando la regla 80 (type)
 
 
-Estado 6
+Estado 4
 
-   81 type: BOOL_KW •
+   81 type: INT_KW •
 
     $default  reduce usando la regla 81 (type)
 
 
-Estado 7
+Estado 5
 
-   82 type: STRING_KW •
+   82 type: FLOAT_KW •
 
     $default  reduce usando la regla 82 (type)
+
+
+Estado 6
+
+   83 type: BOOL_KW •
+
+    $default  reduce usando la regla 83 (type)
+
+
+Estado 7
+
+   84 type: STRING_KW •
+
+    $default  reduce usando la regla 84 (type)
 
 
 Estado 8
@@ -513,34 +519,34 @@ Estado 8
 
 Estado 9
 
-  119 ops_inc_dec: OP_INC •
+  121 ops_inc_dec: OP_INC •
 
-    $default  reduce usando la regla 119 (ops_inc_dec)
+    $default  reduce usando la regla 121 (ops_inc_dec)
 
 
 Estado 10
 
-  120 ops_inc_dec: OP_DEC •
+  122 ops_inc_dec: OP_DEC •
 
-    $default  reduce usando la regla 120 (ops_inc_dec)
+    $default  reduce usando la regla 122 (ops_inc_dec)
 
 
 Estado 11
 
-   91 var_value: D_COLON • IDENTIFIER
+   93 var_value: D_COLON • IDENTIFIER
 
     IDENTIFIER  desplazar e ir al estado 27
 
 
 Estado 12
 
-   90 var_value: IDENTIFIER •
-  121 func_call: IDENTIFIER • LEFT_PARENT RIGHT_PARENT
-  122          | IDENTIFIER • LEFT_PARENT func_args RIGHT_PARENT
+   92 var_value: IDENTIFIER •
+  123 func_call: IDENTIFIER • LEFT_PARENT RIGHT_PARENT
+  124          | IDENTIFIER • LEFT_PARENT func_args RIGHT_PARENT
 
     LEFT_PARENT  desplazar e ir al estado 28
 
-    $default  reduce usando la regla 90 (var_value)
+    $default  reduce usando la regla 92 (var_value)
 
 
 Estado 13
@@ -589,27 +595,27 @@ Estado 18
 
 Estado 19
 
-   75 instance: inst_id •
-   76         | inst_id • OP_ASSIGN exp_op
+   77 instance: inst_id •
+   78         | inst_id • OP_ASSIGN exp_op
 
     OP_ASSIGN  desplazar e ir al estado 32
 
-    $default  reduce usando la regla 75 (instance)
+    $default  reduce usando la regla 77 (instance)
 
 
 Estado 20
 
-   77 inst_id: type • IDENTIFIER
+   79 inst_id: type • IDENTIFIER
 
     IDENTIFIER  desplazar e ir al estado 33
 
 
 Estado 21
 
-  117 inc_dec: var_value • ops_inc_dec
-  128 asingn: var_value • OP_ASSIGN exp_op
-  129       | var_value • OP_ADD_ASSIGN exp_op
-  130       | var_value • ops_assign exp_op
+  119 inc_dec: var_value • ops_inc_dec
+  130 asingn: var_value • OP_ASSIGN exp_op
+  131       | var_value • OP_ADD_ASSIGN exp_op
+  132       | var_value • ops_assign exp_op
 
     OP_INC         desplazar e ir al estado 9
     OP_DEC         desplazar e ir al estado 10
@@ -633,7 +639,7 @@ Estado 22
 
 Estado 23
 
-  118 inc_dec: ops_inc_dec • var_value
+  120 inc_dec: ops_inc_dec • var_value
 
     D_COLON     desplazar e ir al estado 11
     IDENTIFIER  desplazar e ir al estado 42
@@ -666,15 +672,15 @@ Estado 26
 
 Estado 27
 
-   91 var_value: D_COLON IDENTIFIER •
+   93 var_value: D_COLON IDENTIFIER •
 
-    $default  reduce usando la regla 91 (var_value)
+    $default  reduce usando la regla 93 (var_value)
 
 
 Estado 28
 
-  121 func_call: IDENTIFIER LEFT_PARENT • RIGHT_PARENT
-  122          | IDENTIFIER LEFT_PARENT • func_args RIGHT_PARENT
+  123 func_call: IDENTIFIER LEFT_PARENT • RIGHT_PARENT
+  124          | IDENTIFIER LEFT_PARENT • func_args RIGHT_PARENT
 
     TRUE_KW       desplazar e ir al estado 46
     FALSE_KW      desplazar e ir al estado 47
@@ -726,7 +732,7 @@ Estado 31
 
 Estado 32
 
-   76 instance: inst_id OP_ASSIGN • exp_op
+   78 instance: inst_id OP_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -752,14 +758,14 @@ Estado 32
 
 Estado 33
 
-   77 inst_id: type IDENTIFIER •
+   79 inst_id: type IDENTIFIER •
 
-    $default  reduce usando la regla 77 (inst_id)
+    $default  reduce usando la regla 79 (inst_id)
 
 
 Estado 34
 
-  128 asingn: var_value OP_ASSIGN • exp_op
+  130 asingn: var_value OP_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -785,7 +791,7 @@ Estado 34
 
 Estado 35
 
-  129 asingn: var_value OP_ADD_ASSIGN • exp_op
+  131 asingn: var_value OP_ADD_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -811,42 +817,42 @@ Estado 35
 
 Estado 36
 
-  131 ops_assign: OP_SUB_ASSIGN •
-
-    $default  reduce usando la regla 131 (ops_assign)
-
-
-Estado 37
-
-  132 ops_assign: OP_MUL_ASSIGN •
-
-    $default  reduce usando la regla 132 (ops_assign)
-
-
-Estado 38
-
-  133 ops_assign: OP_DIV_ASSIGN •
+  133 ops_assign: OP_SUB_ASSIGN •
 
     $default  reduce usando la regla 133 (ops_assign)
 
 
-Estado 39
+Estado 37
 
-  134 ops_assign: OP_MOD_ASSIGN •
+  134 ops_assign: OP_MUL_ASSIGN •
 
     $default  reduce usando la regla 134 (ops_assign)
 
 
+Estado 38
+
+  135 ops_assign: OP_DIV_ASSIGN •
+
+    $default  reduce usando la regla 135 (ops_assign)
+
+
+Estado 39
+
+  136 ops_assign: OP_MOD_ASSIGN •
+
+    $default  reduce usando la regla 136 (ops_assign)
+
+
 Estado 40
 
-  117 inc_dec: var_value ops_inc_dec •
+  119 inc_dec: var_value ops_inc_dec •
 
-    $default  reduce usando la regla 117 (inc_dec)
+    $default  reduce usando la regla 119 (inc_dec)
 
 
 Estado 41
 
-  130 asingn: var_value ops_assign • exp_op
+  132 asingn: var_value ops_assign • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -872,22 +878,22 @@ Estado 41
 
 Estado 42
 
-   90 var_value: IDENTIFIER •
+   92 var_value: IDENTIFIER •
 
-    $default  reduce usando la regla 90 (var_value)
+    $default  reduce usando la regla 92 (var_value)
 
 
 Estado 43
 
-  118 inc_dec: ops_inc_dec var_value •
+  120 inc_dec: ops_inc_dec var_value •
 
-    $default  reduce usando la regla 118 (inc_dec)
+    $default  reduce usando la regla 120 (inc_dec)
 
 
 Estado 44
 
-   68 func_params: LEFT_PARENT • params_sec RIGHT_PARENT
-   69            | LEFT_PARENT • RIGHT_PARENT
+   70 func_params: LEFT_PARENT • params_sec RIGHT_PARENT
+   71            | LEFT_PARENT • RIGHT_PARENT
 
     RIGHT_PARENT  desplazar e ir al estado 69
     IDENTIFIER    desplazar e ir al estado 70
@@ -907,21 +913,21 @@ Estado 45
 
 Estado 46
 
-   86 value_data: TRUE_KW •
+   88 value_data: TRUE_KW •
 
-    $default  reduce usando la regla 86 (value_data)
+    $default  reduce usando la regla 88 (value_data)
 
 
 Estado 47
 
-   87 value_data: FALSE_KW •
+   89 value_data: FALSE_KW •
 
-    $default  reduce usando la regla 87 (value_data)
+    $default  reduce usando la regla 89 (value_data)
 
 
 Estado 48
 
-   97 exp_op: OP_SUB • exp_op
+   99 exp_op: OP_SUB • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -947,7 +953,7 @@ Estado 48
 
 Estado 49
 
-  106 exp_op: OP_NOT • exp_op
+  108 exp_op: OP_NOT • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -973,7 +979,7 @@ Estado 49
 
 Estado 50
 
-  113 exp_op: LEFT_PARENT • exp_op RIGHT_PARENT
+  115 exp_op: LEFT_PARENT • exp_op RIGHT_PARENT
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -999,69 +1005,69 @@ Estado 50
 
 Estado 51
 
-  121 func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT •
+  123 func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT •
 
-    $default  reduce usando la regla 121 (func_call)
+    $default  reduce usando la regla 123 (func_call)
 
 
 Estado 52
 
-   83 value_data: CHAR •
-
-    $default  reduce usando la regla 83 (value_data)
-
-
-Estado 53
-
-   88 value_data: STRING •
-
-    $default  reduce usando la regla 88 (value_data)
-
-
-Estado 54
-
-   84 value_data: NUM •
-
-    $default  reduce usando la regla 84 (value_data)
-
-
-Estado 55
-
-   85 value_data: NUM_DEC •
+   85 value_data: CHAR •
 
     $default  reduce usando la regla 85 (value_data)
 
 
+Estado 53
+
+   90 value_data: STRING •
+
+    $default  reduce usando la regla 90 (value_data)
+
+
+Estado 54
+
+   86 value_data: NUM •
+
+    $default  reduce usando la regla 86 (value_data)
+
+
+Estado 55
+
+   87 value_data: NUM_DEC •
+
+    $default  reduce usando la regla 87 (value_data)
+
+
 Estado 56
 
-   90 var_value: IDENTIFIER •
-  121 func_call: IDENTIFIER • LEFT_PARENT RIGHT_PARENT
-  122          | IDENTIFIER • LEFT_PARENT func_args RIGHT_PARENT
-  126 func_arg: IDENTIFIER • COLON exp_op
+   92 var_value: IDENTIFIER •
+  123 func_call: IDENTIFIER • LEFT_PARENT RIGHT_PARENT
+  124          | IDENTIFIER • LEFT_PARENT func_args RIGHT_PARENT
+  128 func_arg: IDENTIFIER • COLON exp_op
 
     LEFT_PARENT  desplazar e ir al estado 28
     COLON        desplazar e ir al estado 78
 
-    $default  reduce usando la regla 90 (var_value)
+    $default  reduce usando la regla 92 (var_value)
 
 
 Estado 57
 
-  114 exp_op: value_data •
+  116 exp_op: value_data •
 
-    $default  reduce usando la regla 114 (exp_op)
+    $default  reduce usando la regla 116 (exp_op)
 
 
 Estado 58
 
-   89 value_data: var_value •
-  107 exp_op: var_value • OP_ASSIGN exp_op
-  108       | var_value • OP_ADD_ASSIGN exp_op
-  109       | var_value • OP_SUB_ASSIGN exp_op
-  110       | var_value • OP_MUL_ASSIGN exp_op
-  111       | var_value • OP_DIV_ASSIGN exp_op
-  112       | var_value • OP_MOD_ASSIGN exp_op
-  117 inc_dec: var_value • ops_inc_dec
+   91 value_data: var_value •
+  109 exp_op: var_value • OP_ASSIGN exp_op
+  110       | var_value • OP_ADD_ASSIGN exp_op
+  111       | var_value • OP_SUB_ASSIGN exp_op
+  112       | var_value • OP_MUL_ASSIGN exp_op
+  113       | var_value • OP_DIV_ASSIGN exp_op
+  114       | var_value • OP_MOD_ASSIGN exp_op
+  119 inc_dec: var_value • ops_inc_dec
 
     OP_INC         desplazar e ir al estado 9
     OP_DEC         desplazar e ir al estado 10
@@ -1072,27 +1078,27 @@ Estado 58
     OP_DIV_ASSIGN  desplazar e ir al estado 83
     OP_MOD_ASSIGN  desplazar e ir al estado 84
 
-    $default  reduce usando la regla 89 (value_data)
+    $default  reduce usando la regla 91 (value_data)
 
     ops_inc_dec  ir al estado 40
 
 
 Estado 59
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  127 func_arg: exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  129 func_arg: exp_op •
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -1108,39 +1114,39 @@ Estado 59
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 127 (func_arg)
+    $default  reduce usando la regla 129 (func_arg)
 
 
 Estado 60
 
-  116 exp_op: inc_dec •
+  118 exp_op: inc_dec •
 
-    $default  reduce usando la regla 116 (exp_op)
+    $default  reduce usando la regla 118 (exp_op)
 
 
 Estado 61
 
-  115 exp_op: func_call •
+  117 exp_op: func_call •
 
-    $default  reduce usando la regla 115 (exp_op)
+    $default  reduce usando la regla 117 (exp_op)
 
 
 Estado 62
 
-  122 func_call: IDENTIFIER LEFT_PARENT func_args • RIGHT_PARENT
+  124 func_call: IDENTIFIER LEFT_PARENT func_args • RIGHT_PARENT
 
     RIGHT_PARENT  desplazar e ir al estado 98
 
 
 Estado 63
 
-  123 func_args: func_arg •
-  124          | func_arg • COMMA func_args
-  125          | func_arg • COMMA EOL func_args
+  125 func_args: func_arg •
+  126          | func_arg • COMMA func_args
+  127          | func_arg • COMMA EOL func_args
 
     COMMA  desplazar e ir al estado 99
 
-    $default  reduce usando la regla 123 (func_args)
+    $default  reduce usando la regla 125 (func_args)
 
 
 Estado 64
@@ -1154,20 +1160,20 @@ Estado 64
 
 Estado 65
 
-   76 instance: inst_id OP_ASSIGN exp_op •
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   78 instance: inst_id OP_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -1183,93 +1189,25 @@ Estado 65
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 76 (instance)
+    $default  reduce usando la regla 78 (instance)
 
 
 Estado 66
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  128 asingn: var_value OP_ASSIGN exp_op •
-
-    OP_ADD  desplazar e ir al estado 85
-    OP_SUB  desplazar e ir al estado 86
-    OP_MUL  desplazar e ir al estado 87
-    OP_DIV  desplazar e ir al estado 88
-    OP_MOD  desplazar e ir al estado 89
-    OP_AND  desplazar e ir al estado 90
-    OP_OR   desplazar e ir al estado 91
-    OP_EQ   desplazar e ir al estado 92
-    OP_NEQ  desplazar e ir al estado 93
-    OP_GT   desplazar e ir al estado 94
-    OP_LT   desplazar e ir al estado 95
-    OP_GTE  desplazar e ir al estado 96
-    OP_LTE  desplazar e ir al estado 97
-
-    $default  reduce usando la regla 128 (asingn)
-
-
-Estado 67
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  129 asingn: var_value OP_ADD_ASSIGN exp_op •
-
-    OP_ADD  desplazar e ir al estado 85
-    OP_SUB  desplazar e ir al estado 86
-    OP_MUL  desplazar e ir al estado 87
-    OP_DIV  desplazar e ir al estado 88
-    OP_MOD  desplazar e ir al estado 89
-    OP_AND  desplazar e ir al estado 90
-    OP_OR   desplazar e ir al estado 91
-    OP_EQ   desplazar e ir al estado 92
-    OP_NEQ  desplazar e ir al estado 93
-    OP_GT   desplazar e ir al estado 94
-    OP_LT   desplazar e ir al estado 95
-    OP_GTE  desplazar e ir al estado 96
-    OP_LTE  desplazar e ir al estado 97
-
-    $default  reduce usando la regla 129 (asingn)
-
-
-Estado 68
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  130 asingn: var_value ops_assign exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  130 asingn: var_value OP_ASSIGN exp_op •
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -1288,43 +1226,111 @@ Estado 68
     $default  reduce usando la regla 130 (asingn)
 
 
+Estado 67
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  131 asingn: var_value OP_ADD_ASSIGN exp_op •
+
+    OP_ADD  desplazar e ir al estado 85
+    OP_SUB  desplazar e ir al estado 86
+    OP_MUL  desplazar e ir al estado 87
+    OP_DIV  desplazar e ir al estado 88
+    OP_MOD  desplazar e ir al estado 89
+    OP_AND  desplazar e ir al estado 90
+    OP_OR   desplazar e ir al estado 91
+    OP_EQ   desplazar e ir al estado 92
+    OP_NEQ  desplazar e ir al estado 93
+    OP_GT   desplazar e ir al estado 94
+    OP_LT   desplazar e ir al estado 95
+    OP_GTE  desplazar e ir al estado 96
+    OP_LTE  desplazar e ir al estado 97
+
+    $default  reduce usando la regla 131 (asingn)
+
+
+Estado 68
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  132 asingn: var_value ops_assign exp_op •
+
+    OP_ADD  desplazar e ir al estado 85
+    OP_SUB  desplazar e ir al estado 86
+    OP_MUL  desplazar e ir al estado 87
+    OP_DIV  desplazar e ir al estado 88
+    OP_MOD  desplazar e ir al estado 89
+    OP_AND  desplazar e ir al estado 90
+    OP_OR   desplazar e ir al estado 91
+    OP_EQ   desplazar e ir al estado 92
+    OP_NEQ  desplazar e ir al estado 93
+    OP_GT   desplazar e ir al estado 94
+    OP_LT   desplazar e ir al estado 95
+    OP_GTE  desplazar e ir al estado 96
+    OP_LTE  desplazar e ir al estado 97
+
+    $default  reduce usando la regla 132 (asingn)
+
+
 Estado 69
 
-   69 func_params: LEFT_PARENT RIGHT_PARENT •
+   71 func_params: LEFT_PARENT RIGHT_PARENT •
 
-    $default  reduce usando la regla 69 (func_params)
+    $default  reduce usando la regla 71 (func_params)
 
 
 Estado 70
 
-   73 param: IDENTIFIER • COLON type
-   74      | IDENTIFIER • COLON type OP_ASSIGN exp_op
+   75 param: IDENTIFIER • COLON type
+   76      | IDENTIFIER • COLON type OP_ASSIGN exp_op
 
     COLON  desplazar e ir al estado 101
 
 
 Estado 71
 
-   68 func_params: LEFT_PARENT params_sec • RIGHT_PARENT
+   70 func_params: LEFT_PARENT params_sec • RIGHT_PARENT
 
     RIGHT_PARENT  desplazar e ir al estado 102
 
 
 Estado 72
 
-   70 params_sec: param •
-   71           | param • COMMA params_sec
-   72           | param • COMMA EOL params_sec
+   72 params_sec: param •
+   73           | param • COMMA params_sec
+   74           | param • COMMA EOL params_sec
 
     COMMA  desplazar e ir al estado 103
 
-    $default  reduce usando la regla 70 (params_sec)
+    $default  reduce usando la regla 72 (params_sec)
 
 
 Estado 73
 
-   66 func_type: COLON • type
-   67          | COLON • VOID_KW
+   68 func_type: COLON • type
+   69          | COLON • VOID_KW
 
     CHAR_KW    desplazar e ir al estado 3
     INT_KW     desplazar e ir al estado 4
@@ -1345,40 +1351,40 @@ Estado 74
 
 Estado 75
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   97       | OP_SUB exp_op •
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+   99       | OP_SUB exp_op •
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
-    $default  reduce usando la regla 97 (exp_op)
+    $default  reduce usando la regla 99 (exp_op)
 
 
 Estado 76
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  106       | OP_NOT exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  108       | OP_NOT exp_op •
 
     OP_EQ   desplazar e ir al estado 92
     OP_NEQ  desplazar e ir al estado 93
@@ -1387,25 +1393,25 @@ Estado 76
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 106 (exp_op)
+    $default  reduce usando la regla 108 (exp_op)
 
 
 Estado 77
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  113       | LEFT_PARENT exp_op • RIGHT_PARENT
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  115       | LEFT_PARENT exp_op • RIGHT_PARENT
 
     OP_ADD        desplazar e ir al estado 85
     OP_SUB        desplazar e ir al estado 86
@@ -1425,7 +1431,7 @@ Estado 77
 
 Estado 78
 
-  126 func_arg: IDENTIFIER COLON • exp_op
+  128 func_arg: IDENTIFIER COLON • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1451,7 +1457,7 @@ Estado 78
 
 Estado 79
 
-  107 exp_op: var_value OP_ASSIGN • exp_op
+  109 exp_op: var_value OP_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1477,7 +1483,7 @@ Estado 79
 
 Estado 80
 
-  108 exp_op: var_value OP_ADD_ASSIGN • exp_op
+  110 exp_op: var_value OP_ADD_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1503,7 +1509,7 @@ Estado 80
 
 Estado 81
 
-  109 exp_op: var_value OP_SUB_ASSIGN • exp_op
+  111 exp_op: var_value OP_SUB_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1529,7 +1535,7 @@ Estado 81
 
 Estado 82
 
-  110 exp_op: var_value OP_MUL_ASSIGN • exp_op
+  112 exp_op: var_value OP_MUL_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1555,7 +1561,7 @@ Estado 82
 
 Estado 83
 
-  111 exp_op: var_value OP_DIV_ASSIGN • exp_op
+  113 exp_op: var_value OP_DIV_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1581,7 +1587,7 @@ Estado 83
 
 Estado 84
 
-  112 exp_op: var_value OP_MOD_ASSIGN • exp_op
+  114 exp_op: var_value OP_MOD_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1607,7 +1613,7 @@ Estado 84
 
 Estado 85
 
-   92 exp_op: exp_op OP_ADD • exp_op
+   94 exp_op: exp_op OP_ADD • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1633,7 +1639,7 @@ Estado 85
 
 Estado 86
 
-   93 exp_op: exp_op OP_SUB • exp_op
+   95 exp_op: exp_op OP_SUB • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1659,7 +1665,7 @@ Estado 86
 
 Estado 87
 
-   94 exp_op: exp_op OP_MUL • exp_op
+   96 exp_op: exp_op OP_MUL • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1685,7 +1691,7 @@ Estado 87
 
 Estado 88
 
-   95 exp_op: exp_op OP_DIV • exp_op
+   97 exp_op: exp_op OP_DIV • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1711,7 +1717,7 @@ Estado 88
 
 Estado 89
 
-   96 exp_op: exp_op OP_MOD • exp_op
+   98 exp_op: exp_op OP_MOD • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1737,7 +1743,7 @@ Estado 89
 
 Estado 90
 
-  104 exp_op: exp_op OP_AND • exp_op
+  106 exp_op: exp_op OP_AND • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1763,7 +1769,7 @@ Estado 90
 
 Estado 91
 
-  105 exp_op: exp_op OP_OR • exp_op
+  107 exp_op: exp_op OP_OR • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1789,7 +1795,7 @@ Estado 91
 
 Estado 92
 
-  102 exp_op: exp_op OP_EQ • exp_op
+  104 exp_op: exp_op OP_EQ • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1815,7 +1821,7 @@ Estado 92
 
 Estado 93
 
-  103 exp_op: exp_op OP_NEQ • exp_op
+  105 exp_op: exp_op OP_NEQ • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1841,7 +1847,7 @@ Estado 93
 
 Estado 94
 
-   98 exp_op: exp_op OP_GT • exp_op
+  100 exp_op: exp_op OP_GT • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1867,7 +1873,7 @@ Estado 94
 
 Estado 95
 
-   99 exp_op: exp_op OP_LT • exp_op
+  101 exp_op: exp_op OP_LT • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1893,7 +1899,7 @@ Estado 95
 
 Estado 96
 
-  100 exp_op: exp_op OP_GTE • exp_op
+  102 exp_op: exp_op OP_GTE • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1919,7 +1925,7 @@ Estado 96
 
 Estado 97
 
-  101 exp_op: exp_op OP_LTE • exp_op
+  103 exp_op: exp_op OP_LTE • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -1945,15 +1951,15 @@ Estado 97
 
 Estado 98
 
-  122 func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT •
+  124 func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT •
 
-    $default  reduce usando la regla 122 (func_call)
+    $default  reduce usando la regla 124 (func_call)
 
 
 Estado 99
 
-  124 func_args: func_arg COMMA • func_args
-  125          | func_arg COMMA • EOL func_args
+  126 func_args: func_arg COMMA • func_args
+  127          | func_arg COMMA • EOL func_args
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -2030,8 +2036,8 @@ Estado 100
 
 Estado 101
 
-   73 param: IDENTIFIER COLON • type
-   74      | IDENTIFIER COLON • type OP_ASSIGN exp_op
+   75 param: IDENTIFIER COLON • type
+   76      | IDENTIFIER COLON • type OP_ASSIGN exp_op
 
     CHAR_KW    desplazar e ir al estado 3
     INT_KW     desplazar e ir al estado 4
@@ -2044,15 +2050,15 @@ Estado 101
 
 Estado 102
 
-   68 func_params: LEFT_PARENT params_sec RIGHT_PARENT •
+   70 func_params: LEFT_PARENT params_sec RIGHT_PARENT •
 
-    $default  reduce usando la regla 68 (func_params)
+    $default  reduce usando la regla 70 (func_params)
 
 
 Estado 103
 
-   71 params_sec: param COMMA • params_sec
-   72           | param COMMA • EOL params_sec
+   73 params_sec: param COMMA • params_sec
+   74           | param COMMA • EOL params_sec
 
     IDENTIFIER  desplazar e ir al estado 70
     EOL         desplazar e ir al estado 157
@@ -2063,41 +2069,41 @@ Estado 103
 
 Estado 104
 
-   67 func_type: COLON VOID_KW •
+   69 func_type: COLON VOID_KW •
 
-    $default  reduce usando la regla 67 (func_type)
+    $default  reduce usando la regla 69 (func_type)
 
 
 Estado 105
 
-   66 func_type: COLON type •
+   68 func_type: COLON type •
 
-    $default  reduce usando la regla 66 (func_type)
+    $default  reduce usando la regla 68 (func_type)
 
 
 Estado 106
 
-  113 exp_op: LEFT_PARENT exp_op RIGHT_PARENT •
+  115 exp_op: LEFT_PARENT exp_op RIGHT_PARENT •
 
-    $default  reduce usando la regla 113 (exp_op)
+    $default  reduce usando la regla 115 (exp_op)
 
 
 Estado 107
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  126 func_arg: IDENTIFIER COLON exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  128 func_arg: IDENTIFIER COLON exp_op •
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -2113,203 +2119,145 @@ Estado 107
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 126 (func_arg)
+    $default  reduce usando la regla 128 (func_arg)
 
 
 Estado 108
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  107       | var_value OP_ASSIGN exp_op •
-
-    $default  reduce usando la regla 107 (exp_op)
-
-
-Estado 109
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  108       | var_value OP_ADD_ASSIGN exp_op •
-
-    $default  reduce usando la regla 108 (exp_op)
-
-
-Estado 110
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  109       | var_value OP_SUB_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  109       | var_value OP_ASSIGN exp_op •
 
     $default  reduce usando la regla 109 (exp_op)
 
 
-Estado 111
+Estado 109
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  110       | var_value OP_MUL_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  110       | var_value OP_ADD_ASSIGN exp_op •
 
     $default  reduce usando la regla 110 (exp_op)
 
 
-Estado 112
+Estado 110
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  111       | var_value OP_DIV_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  111       | var_value OP_SUB_ASSIGN exp_op •
 
     $default  reduce usando la regla 111 (exp_op)
 
 
-Estado 113
+Estado 111
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  112       | var_value OP_MOD_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  112       | var_value OP_MUL_ASSIGN exp_op •
 
     $default  reduce usando la regla 112 (exp_op)
 
 
+Estado 112
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  113       | var_value OP_DIV_ASSIGN exp_op •
+
+    $default  reduce usando la regla 113 (exp_op)
+
+
+Estado 113
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  114       | var_value OP_MOD_ASSIGN exp_op •
+
+    $default  reduce usando la regla 114 (exp_op)
+
+
 Estado 114
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   92       | exp_op OP_ADD exp_op •
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-
-    OP_AND  desplazar e ir al estado 90
-    OP_OR   desplazar e ir al estado 91
-    OP_EQ   desplazar e ir al estado 92
-    OP_NEQ  desplazar e ir al estado 93
-    OP_GT   desplazar e ir al estado 94
-    OP_LT   desplazar e ir al estado 95
-    OP_GTE  desplazar e ir al estado 96
-    OP_LTE  desplazar e ir al estado 97
-
-    $default  reduce usando la regla 92 (exp_op)
-
-
-Estado 115
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   93       | exp_op OP_SUB exp_op •
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-
-    OP_AND  desplazar e ir al estado 90
-    OP_OR   desplazar e ir al estado 91
-    OP_EQ   desplazar e ir al estado 92
-    OP_NEQ  desplazar e ir al estado 93
-    OP_GT   desplazar e ir al estado 94
-    OP_LT   desplazar e ir al estado 95
-    OP_GTE  desplazar e ir al estado 96
-    OP_LTE  desplazar e ir al estado 97
-
-    $default  reduce usando la regla 93 (exp_op)
-
-
-Estado 116
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   94       | exp_op OP_MUL exp_op •
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   94       | exp_op OP_ADD exp_op •
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_AND  desplazar e ir al estado 90
     OP_OR   desplazar e ir al estado 91
@@ -2323,22 +2271,22 @@ Estado 116
     $default  reduce usando la regla 94 (exp_op)
 
 
-Estado 117
+Estado 115
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   95       | exp_op OP_DIV exp_op •
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   95       | exp_op OP_SUB exp_op •
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_AND  desplazar e ir al estado 90
     OP_OR   desplazar e ir al estado 91
@@ -2352,22 +2300,22 @@ Estado 117
     $default  reduce usando la regla 95 (exp_op)
 
 
-Estado 118
+Estado 116
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   96       | exp_op OP_MOD exp_op •
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   96       | exp_op OP_MUL exp_op •
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_AND  desplazar e ir al estado 90
     OP_OR   desplazar e ir al estado 91
@@ -2381,23 +2329,25 @@ Estado 118
     $default  reduce usando la regla 96 (exp_op)
 
 
-Estado 119
+Estado 117
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  104       | exp_op OP_AND exp_op •
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   97       | exp_op OP_DIV exp_op •
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
+    OP_AND  desplazar e ir al estado 90
+    OP_OR   desplazar e ir al estado 91
     OP_EQ   desplazar e ir al estado 92
     OP_NEQ  desplazar e ir al estado 93
     OP_GT   desplazar e ir al estado 94
@@ -2405,159 +2355,215 @@ Estado 119
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 104 (exp_op)
+    $default  reduce usando la regla 97 (exp_op)
 
 
-Estado 120
+Estado 118
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-  105       | exp_op OP_OR exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+   98       | exp_op OP_MOD exp_op •
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
+    OP_AND  desplazar e ir al estado 90
+    OP_OR   desplazar e ir al estado 91
     OP_EQ   desplazar e ir al estado 92
     OP_NEQ  desplazar e ir al estado 93
     OP_GT   desplazar e ir al estado 94
     OP_LT   desplazar e ir al estado 95
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
-
-    $default  reduce usando la regla 105 (exp_op)
-
-
-Estado 121
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  102       | exp_op OP_EQ exp_op •
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-
-    $default  reduce usando la regla 102 (exp_op)
-
-
-Estado 122
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  103       | exp_op OP_NEQ exp_op •
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
-
-    $default  reduce usando la regla 103 (exp_op)
-
-
-Estado 123
-
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   98       | exp_op OP_GT exp_op •
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
 
     $default  reduce usando la regla 98 (exp_op)
 
 
-Estado 124
+Estado 119
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-   99       | exp_op OP_LT exp_op •
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  106       | exp_op OP_AND exp_op •
+  107       | exp_op • OP_OR exp_op
 
-    $default  reduce usando la regla 99 (exp_op)
+    OP_EQ   desplazar e ir al estado 92
+    OP_NEQ  desplazar e ir al estado 93
+    OP_GT   desplazar e ir al estado 94
+    OP_LT   desplazar e ir al estado 95
+    OP_GTE  desplazar e ir al estado 96
+    OP_LTE  desplazar e ir al estado 97
+
+    $default  reduce usando la regla 106 (exp_op)
 
 
-Estado 125
+Estado 120
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  100       | exp_op OP_GTE exp_op •
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+  107       | exp_op OP_OR exp_op •
+
+    OP_EQ   desplazar e ir al estado 92
+    OP_NEQ  desplazar e ir al estado 93
+    OP_GT   desplazar e ir al estado 94
+    OP_LT   desplazar e ir al estado 95
+    OP_GTE  desplazar e ir al estado 96
+    OP_LTE  desplazar e ir al estado 97
+
+    $default  reduce usando la regla 107 (exp_op)
+
+
+Estado 121
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  104       | exp_op OP_EQ exp_op •
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+
+    $default  reduce usando la regla 104 (exp_op)
+
+
+Estado 122
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  105       | exp_op OP_NEQ exp_op •
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+
+    $default  reduce usando la regla 105 (exp_op)
+
+
+Estado 123
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  100       | exp_op OP_GT exp_op •
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     $default  reduce usando la regla 100 (exp_op)
 
 
-Estado 126
+Estado 124
 
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  101       | exp_op OP_LTE exp_op •
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  101       | exp_op OP_LT exp_op •
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     $default  reduce usando la regla 101 (exp_op)
 
 
+Estado 125
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  102       | exp_op OP_GTE exp_op •
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+
+    $default  reduce usando la regla 102 (exp_op)
+
+
+Estado 126
+
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  103       | exp_op OP_LTE exp_op •
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
+
+    $default  reduce usando la regla 103 (exp_op)
+
+
 Estado 127
 
-  125 func_args: func_arg COMMA EOL • func_args
+  127 func_args: func_arg COMMA EOL • func_args
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -2585,22 +2591,22 @@ Estado 127
 
 Estado 128
 
-  124 func_args: func_arg COMMA func_args •
+  126 func_args: func_arg COMMA func_args •
 
-    $default  reduce usando la regla 124 (func_args)
+    $default  reduce usando la regla 126 (func_args)
 
 
 Estado 129
 
-   49 if_stmt: IF_KW • LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d
+   51 if_stmt: IF_KW • LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d
 
     LEFT_PARENT  desplazar e ir al estado 160
 
 
 Estado 130
 
-   55 switch_stmt: SWITCH_KW • LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW • LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
+   57 switch_stmt: SWITCH_KW • LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW • LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
 
     LEFT_PARENT  desplazar e ir al estado 161
 
@@ -2614,7 +2620,7 @@ Estado 131
 
 Estado 132
 
-   42 while_exp: WHILE_KW • LEFT_PARENT exp_op RIGHT_PARENT
+   44 while_exp: WHILE_KW • LEFT_PARENT exp_op RIGHT_PARENT
 
     LEFT_PARENT  desplazar e ir al estado 163
 
@@ -2666,7 +2672,7 @@ Estado 135
 
 Estado 136
 
-   65 try_catch: TRY_KW • LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   67 try_catch: TRY_KW • LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
 
     LEFT_BRACKET  desplazar e ir al estado 166
 
@@ -2746,20 +2752,20 @@ Estado 146
 
 Estado 147
 
-   43 conditional: if_els_stmt •
+   45 conditional: if_els_stmt •
 
-    $default  reduce usando la regla 43 (conditional)
+    $default  reduce usando la regla 45 (conditional)
 
 
 Estado 148
 
-   45 if_els_stmt: if_stmt •
-   46            | if_stmt • else_stmt
-   47            | if_stmt • els_if_stmt
+   47 if_els_stmt: if_stmt •
+   48            | if_stmt • else_stmt
+   49            | if_stmt • els_if_stmt
 
     ELSE_KW  desplazar e ir al estado 170
 
-    $default  reduce usando la regla 45 (if_els_stmt)
+    $default  reduce usando la regla 47 (if_els_stmt)
 
     else_stmt    ir al estado 171
     els_if_stmt  ir al estado 172
@@ -2767,9 +2773,9 @@ Estado 148
 
 Estado 149
 
-   44 conditional: switch_stmt •
+   46 conditional: switch_stmt •
 
-    $default  reduce usando la regla 44 (conditional)
+    $default  reduce usando la regla 46 (conditional)
 
 
 Estado 150
@@ -2781,12 +2787,12 @@ Estado 150
 
 Estado 151
 
-   63 exception: try_catch •
-   64          | try_catch • FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET
+   65 exception: try_catch •
+   66          | try_catch • FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET
 
     FINALLY_KW  desplazar e ir al estado 173
 
-    $default  reduce usando la regla 63 (exception)
+    $default  reduce usando la regla 65 (exception)
 
 
 Estado 152
@@ -2819,17 +2825,17 @@ Estado 155
 
 Estado 156
 
-   73 param: IDENTIFIER COLON type •
-   74      | IDENTIFIER COLON type • OP_ASSIGN exp_op
+   75 param: IDENTIFIER COLON type •
+   76      | IDENTIFIER COLON type • OP_ASSIGN exp_op
 
     OP_ASSIGN  desplazar e ir al estado 174
 
-    $default  reduce usando la regla 73 (param)
+    $default  reduce usando la regla 75 (param)
 
 
 Estado 157
 
-   72 params_sec: param COMMA EOL • params_sec
+   74 params_sec: param COMMA EOL • params_sec
 
     IDENTIFIER  desplazar e ir al estado 70
 
@@ -2839,21 +2845,21 @@ Estado 157
 
 Estado 158
 
-   71 params_sec: param COMMA params_sec •
+   73 params_sec: param COMMA params_sec •
 
-    $default  reduce usando la regla 71 (params_sec)
+    $default  reduce usando la regla 73 (params_sec)
 
 
 Estado 159
 
-  125 func_args: func_arg COMMA EOL func_args •
+  127 func_args: func_arg COMMA EOL func_args •
 
-    $default  reduce usando la regla 125 (func_args)
+    $default  reduce usando la regla 127 (func_args)
 
 
 Estado 160
 
-   49 if_stmt: IF_KW LEFT_PARENT • exp_op $@2 RIGHT_PARENT std_blck_d
+   51 if_stmt: IF_KW LEFT_PARENT • exp_op $@2 RIGHT_PARENT std_blck_d
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -2879,8 +2885,8 @@ Estado 160
 
 Estado 161
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT • exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT • exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
+   57 switch_stmt: SWITCH_KW LEFT_PARENT • exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT • exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -2910,13 +2916,14 @@ Estado 162
 
     IDENTIFIER  desplazar e ir al estado 178
 
-    for_decl  ir al estado 179
-    for_var   ir al estado 180
+    for_decl     ir al estado 179
+    for_vrs_dec  ir al estado 180
+    for_var      ir al estado 181
 
 
 Estado 163
 
-   42 while_exp: WHILE_KW LEFT_PARENT • exp_op RIGHT_PARENT
+   44 while_exp: WHILE_KW LEFT_PARENT • exp_op RIGHT_PARENT
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -2934,7 +2941,7 @@ Estado 163
 
     value_data   ir al estado 57
     var_value    ir al estado 58
-    exp_op       ir al estado 181
+    exp_op       ir al estado 182
     inc_dec      ir al estado 60
     ops_inc_dec  ir al estado 23
     func_call    ir al estado 61
@@ -2946,25 +2953,25 @@ Estado 164
 
     WHILE_KW  desplazar e ir al estado 132
 
-    while_exp  ir al estado 182
+    while_exp  ir al estado 183
 
 
 Estado 165
 
    28 rtrn: RETURN_KW exp_op •
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -2985,11 +2992,11 @@ Estado 165
 
 Estado 166
 
-   65 try_catch: TRY_KW LEFT_BRACKET • block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   67 try_catch: TRY_KW LEFT_BRACKET • block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
 
     $default  reduce usando la regla 14 (block)
 
-    block  ir al estado 183
+    block  ir al estado 184
 
 
 Estado 167
@@ -2997,7 +3004,7 @@ Estado 167
    30 throw: THROW_KW IDENTIFIER • LEFT_PARENT STRING RIGHT_PARENT
    31      | THROW_KW IDENTIFIER • LEFT_PARENT RIGHT_PARENT
 
-    LEFT_PARENT  desplazar e ir al estado 184
+    LEFT_PARENT  desplazar e ir al estado 185
 
 
 Estado 168
@@ -3016,46 +3023,46 @@ Estado 169
 
 Estado 170
 
-   50 else_stmt: ELSE_KW • std_blck_d
-   51 els_if_stmt: ELSE_KW • if_stmt
+   52 else_stmt: ELSE_KW • std_blck_d
+   53 els_if_stmt: ELSE_KW • if_stmt
 
     IF_KW         desplazar e ir al estado 129
     LEFT_BRACKET  desplazar e ir al estado 30
 
-    std_blck_d  ir al estado 185
-    if_stmt     ir al estado 186
+    std_blck_d  ir al estado 186
+    if_stmt     ir al estado 187
 
 
 Estado 171
 
-   46 if_els_stmt: if_stmt else_stmt •
+   48 if_els_stmt: if_stmt else_stmt •
 
-    $default  reduce usando la regla 46 (if_els_stmt)
+    $default  reduce usando la regla 48 (if_els_stmt)
 
 
 Estado 172
 
-   47 if_els_stmt: if_stmt els_if_stmt •
-   52 els_if_stmt: els_if_stmt • ELSE_KW if_stmt
-   53            | els_if_stmt • else_stmt
+   49 if_els_stmt: if_stmt els_if_stmt •
+   54 els_if_stmt: els_if_stmt • ELSE_KW if_stmt
+   55            | els_if_stmt • else_stmt
 
-    ELSE_KW  desplazar e ir al estado 187
+    ELSE_KW  desplazar e ir al estado 188
 
-    $default  reduce usando la regla 47 (if_els_stmt)
+    $default  reduce usando la regla 49 (if_els_stmt)
 
-    else_stmt  ir al estado 188
+    else_stmt  ir al estado 189
 
 
 Estado 173
 
-   64 exception: try_catch FINALLY_KW • LEFT_BRACKET block RIGHT_BRACKET
+   66 exception: try_catch FINALLY_KW • LEFT_BRACKET block RIGHT_BRACKET
 
-    LEFT_BRACKET  desplazar e ir al estado 189
+    LEFT_BRACKET  desplazar e ir al estado 190
 
 
 Estado 174
 
-   74 param: IDENTIFIER COLON type OP_ASSIGN • exp_op
+   76 param: IDENTIFIER COLON type OP_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -3073,7 +3080,7 @@ Estado 174
 
     value_data   ir al estado 57
     var_value    ir al estado 58
-    exp_op       ir al estado 190
+    exp_op       ir al estado 191
     inc_dec      ir al estado 60
     ops_inc_dec  ir al estado 23
     func_call    ir al estado 61
@@ -3081,27 +3088,27 @@ Estado 174
 
 Estado 175
 
-   72 params_sec: param COMMA EOL params_sec •
+   74 params_sec: param COMMA EOL params_sec •
 
-    $default  reduce usando la regla 72 (params_sec)
+    $default  reduce usando la regla 74 (params_sec)
 
 
 Estado 176
 
-   49 if_stmt: IF_KW LEFT_PARENT exp_op • $@2 RIGHT_PARENT std_blck_d
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   51 if_stmt: IF_KW LEFT_PARENT exp_op • $@2 RIGHT_PARENT std_blck_d
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -3117,28 +3124,28 @@ Estado 176
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 48 ($@2)
+    $default  reduce usando la regla 50 ($@2)
 
-    $@2  ir al estado 191
+    $@2  ir al estado 192
 
 
 Estado 177
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op • RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT exp_op • RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op • RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT exp_op • RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD        desplazar e ir al estado 85
     OP_SUB        desplazar e ir al estado 86
@@ -3153,46 +3160,56 @@ Estado 177
     OP_LT         desplazar e ir al estado 95
     OP_GTE        desplazar e ir al estado 96
     OP_LTE        desplazar e ir al estado 97
-    RIGHT_PARENT  desplazar e ir al estado 192
+    RIGHT_PARENT  desplazar e ir al estado 193
 
 
 Estado 178
 
-   36 for_var: IDENTIFIER • OP_ASSIGN exp_op
+   38 for_var: IDENTIFIER • OP_ASSIGN exp_op
 
-    OP_ASSIGN  desplazar e ir al estado 193
+    OP_ASSIGN  desplazar e ir al estado 194
 
 
 Estado 179
 
    32 loop: FOR_KW LEFT_PARENT for_decl • RIGHT_PARENT std_blck_d
 
-    RIGHT_PARENT  desplazar e ir al estado 194
+    RIGHT_PARENT  desplazar e ir al estado 195
 
 
 Estado 180
 
-   35 for_decl: for_var • COLON for_cond COLON for_sec
+   35 for_decl: for_vrs_dec • COLON for_cond COLON for_sec
 
-    COLON  desplazar e ir al estado 195
+    COLON  desplazar e ir al estado 196
 
 
 Estado 181
 
-   42 while_exp: WHILE_KW LEFT_PARENT exp_op • RIGHT_PARENT
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   36 for_vrs_dec: for_var •
+   37            | for_var • COMMA for_vrs_dec
+
+    COMMA  desplazar e ir al estado 197
+
+    $default  reduce usando la regla 36 (for_vrs_dec)
+
+
+Estado 182
+
+   44 while_exp: WHILE_KW LEFT_PARENT exp_op • RIGHT_PARENT
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD        desplazar e ir al estado 85
     OP_SUB        desplazar e ir al estado 86
@@ -3207,20 +3224,20 @@ Estado 181
     OP_LT         desplazar e ir al estado 95
     OP_GTE        desplazar e ir al estado 96
     OP_LTE        desplazar e ir al estado 97
-    RIGHT_PARENT  desplazar e ir al estado 196
+    RIGHT_PARENT  desplazar e ir al estado 198
 
 
-Estado 182
+Estado 183
 
    34 loop: DO_KW std_blck_d while_exp •
 
     $default  reduce usando la regla 34 (loop)
 
 
-Estado 183
+Estado 184
 
    15 block: block • block_line
-   65 try_catch: TRY_KW LEFT_BRACKET block • RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   67 try_catch: TRY_KW LEFT_BRACKET block • RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
 
     CHAR_KW        desplazar e ir al estado 3
     INT_KW         desplazar e ir al estado 4
@@ -3238,7 +3255,7 @@ Estado 183
     THROW_KW       desplazar e ir al estado 137
     OP_INC         desplazar e ir al estado 9
     OP_DEC         desplazar e ir al estado 10
-    RIGHT_BRACKET  desplazar e ir al estado 197
+    RIGHT_BRACKET  desplazar e ir al estado 199
     D_COLON        desplazar e ir al estado 11
     IDENTIFIER     desplazar e ir al estado 12
     EOL            desplazar e ir al estado 139
@@ -3265,73 +3282,73 @@ Estado 183
     asingn       ir al estado 155
 
 
-Estado 184
+Estado 185
 
    30 throw: THROW_KW IDENTIFIER LEFT_PARENT • STRING RIGHT_PARENT
    31      | THROW_KW IDENTIFIER LEFT_PARENT • RIGHT_PARENT
 
-    RIGHT_PARENT  desplazar e ir al estado 198
-    STRING        desplazar e ir al estado 199
-
-
-Estado 185
-
-   50 else_stmt: ELSE_KW std_blck_d •
-
-    $default  reduce usando la regla 50 (else_stmt)
+    RIGHT_PARENT  desplazar e ir al estado 200
+    STRING        desplazar e ir al estado 201
 
 
 Estado 186
 
-   51 els_if_stmt: ELSE_KW if_stmt •
+   52 else_stmt: ELSE_KW std_blck_d •
 
-    $default  reduce usando la regla 51 (els_if_stmt)
+    $default  reduce usando la regla 52 (else_stmt)
 
 
 Estado 187
 
-   50 else_stmt: ELSE_KW • std_blck_d
-   52 els_if_stmt: els_if_stmt ELSE_KW • if_stmt
-
-    IF_KW         desplazar e ir al estado 129
-    LEFT_BRACKET  desplazar e ir al estado 30
-
-    std_blck_d  ir al estado 185
-    if_stmt     ir al estado 200
-
-
-Estado 188
-
-   53 els_if_stmt: els_if_stmt else_stmt •
+   53 els_if_stmt: ELSE_KW if_stmt •
 
     $default  reduce usando la regla 53 (els_if_stmt)
 
 
+Estado 188
+
+   52 else_stmt: ELSE_KW • std_blck_d
+   54 els_if_stmt: els_if_stmt ELSE_KW • if_stmt
+
+    IF_KW         desplazar e ir al estado 129
+    LEFT_BRACKET  desplazar e ir al estado 30
+
+    std_blck_d  ir al estado 186
+    if_stmt     ir al estado 202
+
+
 Estado 189
 
-   64 exception: try_catch FINALLY_KW LEFT_BRACKET • block RIGHT_BRACKET
+   55 els_if_stmt: els_if_stmt else_stmt •
 
-    $default  reduce usando la regla 14 (block)
-
-    block  ir al estado 201
+    $default  reduce usando la regla 55 (els_if_stmt)
 
 
 Estado 190
 
-   74 param: IDENTIFIER COLON type OP_ASSIGN exp_op •
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   66 exception: try_catch FINALLY_KW LEFT_BRACKET • block RIGHT_BRACKET
+
+    $default  reduce usando la regla 14 (block)
+
+    block  ir al estado 203
+
+
+Estado 191
+
+   76 param: IDENTIFIER COLON type OP_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -3347,27 +3364,27 @@ Estado 190
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 74 (param)
-
-
-Estado 191
-
-   49 if_stmt: IF_KW LEFT_PARENT exp_op $@2 • RIGHT_PARENT std_blck_d
-
-    RIGHT_PARENT  desplazar e ir al estado 202
+    $default  reduce usando la regla 76 (param)
 
 
 Estado 192
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT • LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT • LEFT_BRACKET EOL RIGHT_BRACKET
+   51 if_stmt: IF_KW LEFT_PARENT exp_op $@2 • RIGHT_PARENT std_blck_d
 
-    LEFT_BRACKET  desplazar e ir al estado 203
+    RIGHT_PARENT  desplazar e ir al estado 204
 
 
 Estado 193
 
-   36 for_var: IDENTIFIER OP_ASSIGN • exp_op
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT • LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT • LEFT_BRACKET EOL RIGHT_BRACKET
+
+    LEFT_BRACKET  desplazar e ir al estado 205
+
+
+Estado 194
+
+   38 for_var: IDENTIFIER OP_ASSIGN • exp_op
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -3385,24 +3402,24 @@ Estado 193
 
     value_data   ir al estado 57
     var_value    ir al estado 58
-    exp_op       ir al estado 204
+    exp_op       ir al estado 206
     inc_dec      ir al estado 60
     ops_inc_dec  ir al estado 23
     func_call    ir al estado 61
 
 
-Estado 194
+Estado 195
 
    32 loop: FOR_KW LEFT_PARENT for_decl RIGHT_PARENT • std_blck_d
 
     LEFT_BRACKET  desplazar e ir al estado 30
 
-    std_blck_d  ir al estado 205
+    std_blck_d  ir al estado 207
 
 
-Estado 195
+Estado 196
 
-   35 for_decl: for_var COLON • for_cond COLON for_sec
+   35 for_decl: for_vrs_dec COLON • for_cond COLON for_sec
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -3418,54 +3435,64 @@ Estado 195
     NUM_DEC      desplazar e ir al estado 55
     IDENTIFIER   desplazar e ir al estado 12
 
-    for_cond     ir al estado 206
+    for_cond     ir al estado 208
     value_data   ir al estado 57
     var_value    ir al estado 58
-    exp_op       ir al estado 207
+    exp_op       ir al estado 209
     inc_dec      ir al estado 60
     ops_inc_dec  ir al estado 23
     func_call    ir al estado 61
 
 
-Estado 196
-
-   42 while_exp: WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT •
-
-    $default  reduce usando la regla 42 (while_exp)
-
-
 Estado 197
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET • CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   37 for_vrs_dec: for_var COMMA • for_vrs_dec
 
-    CATCH_KW  desplazar e ir al estado 208
+    IDENTIFIER  desplazar e ir al estado 178
+
+    for_vrs_dec  ir al estado 210
+    for_var      ir al estado 181
 
 
 Estado 198
+
+   44 while_exp: WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT •
+
+    $default  reduce usando la regla 44 (while_exp)
+
+
+Estado 199
+
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET • CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+
+    CATCH_KW  desplazar e ir al estado 211
+
+
+Estado 200
 
    31 throw: THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT •
 
     $default  reduce usando la regla 31 (throw)
 
 
-Estado 199
+Estado 201
 
    30 throw: THROW_KW IDENTIFIER LEFT_PARENT STRING • RIGHT_PARENT
 
-    RIGHT_PARENT  desplazar e ir al estado 209
+    RIGHT_PARENT  desplazar e ir al estado 212
 
 
-Estado 200
+Estado 202
 
-   52 els_if_stmt: els_if_stmt ELSE_KW if_stmt •
+   54 els_if_stmt: els_if_stmt ELSE_KW if_stmt •
 
-    $default  reduce usando la regla 52 (els_if_stmt)
+    $default  reduce usando la regla 54 (els_if_stmt)
 
 
-Estado 201
+Estado 203
 
    15 block: block • block_line
-   64 exception: try_catch FINALLY_KW LEFT_BRACKET block • RIGHT_BRACKET
+   66 exception: try_catch FINALLY_KW LEFT_BRACKET block • RIGHT_BRACKET
 
     CHAR_KW        desplazar e ir al estado 3
     INT_KW         desplazar e ir al estado 4
@@ -3483,7 +3510,7 @@ Estado 201
     THROW_KW       desplazar e ir al estado 137
     OP_INC         desplazar e ir al estado 9
     OP_DEC         desplazar e ir al estado 10
-    RIGHT_BRACKET  desplazar e ir al estado 210
+    RIGHT_BRACKET  desplazar e ir al estado 213
     D_COLON        desplazar e ir al estado 11
     IDENTIFIER     desplazar e ir al estado 12
     EOL            desplazar e ir al estado 139
@@ -3510,39 +3537,39 @@ Estado 201
     asingn       ir al estado 155
 
 
-Estado 202
+Estado 204
 
-   49 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT • std_blck_d
+   51 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT • std_blck_d
 
     LEFT_BRACKET  desplazar e ir al estado 30
 
-    std_blck_d  ir al estado 211
+    std_blck_d  ir al estado 214
 
 
-Estado 203
+Estado 205
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET • EOL switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET • EOL RIGHT_BRACKET
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET • EOL switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET • EOL RIGHT_BRACKET
 
-    EOL  desplazar e ir al estado 212
+    EOL  desplazar e ir al estado 215
 
 
-Estado 204
+Estado 206
 
-   36 for_var: IDENTIFIER OP_ASSIGN exp_op •
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   38 for_var: IDENTIFIER OP_ASSIGN exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -3558,39 +3585,39 @@ Estado 204
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 36 (for_var)
+    $default  reduce usando la regla 38 (for_var)
 
 
-Estado 205
+Estado 207
 
    32 loop: FOR_KW LEFT_PARENT for_decl RIGHT_PARENT std_blck_d •
 
     $default  reduce usando la regla 32 (loop)
 
 
-Estado 206
+Estado 208
 
-   35 for_decl: for_var COLON for_cond • COLON for_sec
+   35 for_decl: for_vrs_dec COLON for_cond • COLON for_sec
 
-    COLON  desplazar e ir al estado 213
+    COLON  desplazar e ir al estado 216
 
 
-Estado 207
+Estado 209
 
-   37 for_cond: exp_op •
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   39 for_cond: exp_op •
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -3606,77 +3633,84 @@ Estado 207
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
 
-    $default  reduce usando la regla 37 (for_cond)
+    $default  reduce usando la regla 39 (for_cond)
 
 
-Estado 208
+Estado 210
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW • LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   37 for_vrs_dec: for_var COMMA for_vrs_dec •
 
-    LEFT_PARENT  desplazar e ir al estado 214
+    $default  reduce usando la regla 37 (for_vrs_dec)
 
 
-Estado 209
+Estado 211
+
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW • LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+
+    LEFT_PARENT  desplazar e ir al estado 217
+
+
+Estado 212
 
    30 throw: THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT •
 
     $default  reduce usando la regla 30 (throw)
 
 
-Estado 210
-
-   64 exception: try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET •
-
-    $default  reduce usando la regla 64 (exception)
-
-
-Estado 211
-
-   49 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d •
-
-    $default  reduce usando la regla 49 (if_stmt)
-
-
-Estado 212
-
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL • switch_block $@3 RIGHT_BRACKET
-   56            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL • RIGHT_BRACKET
-
-    CASE_KW        desplazar e ir al estado 215
-    DEFAULT_KW     desplazar e ir al estado 216
-    RIGHT_BRACKET  desplazar e ir al estado 217
-
-    switch_block  ir al estado 218
-    switch_line   ir al estado 219
-
-
 Estado 213
 
-   35 for_decl: for_var COLON for_cond COLON • for_sec
+   66 exception: try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET •
+
+    $default  reduce usando la regla 66 (exception)
+
+
+Estado 214
+
+   51 if_stmt: IF_KW LEFT_PARENT exp_op $@2 RIGHT_PARENT std_blck_d •
+
+    $default  reduce usando la regla 51 (if_stmt)
+
+
+Estado 215
+
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL • switch_block $@3 RIGHT_BRACKET
+   58            | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL • RIGHT_BRACKET
+
+    CASE_KW        desplazar e ir al estado 218
+    DEFAULT_KW     desplazar e ir al estado 219
+    RIGHT_BRACKET  desplazar e ir al estado 220
+
+    switch_block  ir al estado 221
+    switch_line   ir al estado 222
+
+
+Estado 216
+
+   35 for_decl: for_vrs_dec COLON for_cond COLON • for_sec
 
     OP_INC      desplazar e ir al estado 9
     OP_DEC      desplazar e ir al estado 10
     D_COLON     desplazar e ir al estado 11
     IDENTIFIER  desplazar e ir al estado 42
 
-    for_sec      ir al estado 220
-    for_iter     ir al estado 221
+    for_sec      ir al estado 223
+    for_iter     ir al estado 224
     var_value    ir al estado 21
-    inc_dec      ir al estado 222
+    inc_dec      ir al estado 225
     ops_inc_dec  ir al estado 23
-    asingn       ir al estado 223
+    asingn       ir al estado 226
 
 
-Estado 214
+Estado 217
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT • IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT • IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
 
-    IDENTIFIER  desplazar e ir al estado 224
+    IDENTIFIER  desplazar e ir al estado 227
 
 
-Estado 215
+Estado 218
 
-   60 switch_line: CASE_KW • exp_op COLON $@4 block
+   62 switch_line: CASE_KW • exp_op COLON $@4 block
 
     TRUE_KW      desplazar e ir al estado 46
     FALSE_KW     desplazar e ir al estado 47
@@ -3694,101 +3728,101 @@ Estado 215
 
     value_data   ir al estado 57
     var_value    ir al estado 58
-    exp_op       ir al estado 225
+    exp_op       ir al estado 228
     inc_dec      ir al estado 60
     ops_inc_dec  ir al estado 23
     func_call    ir al estado 61
 
 
-Estado 216
-
-   62 switch_line: DEFAULT_KW • COLON $@5 block
-
-    COLON  desplazar e ir al estado 226
-
-
-Estado 217
-
-   56 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET •
-
-    $default  reduce usando la regla 56 (switch_stmt)
-
-
-Estado 218
-
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block • $@3 RIGHT_BRACKET
-   58 switch_block: switch_block • switch_line
-
-    CASE_KW     desplazar e ir al estado 215
-    DEFAULT_KW  desplazar e ir al estado 216
-
-    $default  reduce usando la regla 54 ($@3)
-
-    $@3          ir al estado 227
-    switch_line  ir al estado 228
-
-
 Estado 219
 
-   57 switch_block: switch_line •
+   64 switch_line: DEFAULT_KW • COLON $@5 block
 
-    $default  reduce usando la regla 57 (switch_block)
+    COLON  desplazar e ir al estado 229
 
 
 Estado 220
 
-   35 for_decl: for_var COLON for_cond COLON for_sec •
+   58 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET •
 
-    $default  reduce usando la regla 35 (for_decl)
+    $default  reduce usando la regla 58 (switch_stmt)
 
 
 Estado 221
 
-   38 for_sec: for_iter •
-   39        | for_iter • COMMA for_sec
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block • $@3 RIGHT_BRACKET
+   60 switch_block: switch_block • switch_line
 
-    COMMA  desplazar e ir al estado 229
+    CASE_KW     desplazar e ir al estado 218
+    DEFAULT_KW  desplazar e ir al estado 219
 
-    $default  reduce usando la regla 38 (for_sec)
+    $default  reduce usando la regla 56 ($@3)
+
+    $@3          ir al estado 230
+    switch_line  ir al estado 231
 
 
 Estado 222
 
-   40 for_iter: inc_dec •
+   59 switch_block: switch_line •
 
-    $default  reduce usando la regla 40 (for_iter)
+    $default  reduce usando la regla 59 (switch_block)
 
 
 Estado 223
 
-   41 for_iter: asingn •
+   35 for_decl: for_vrs_dec COLON for_cond COLON for_sec •
 
-    $default  reduce usando la regla 41 (for_iter)
+    $default  reduce usando la regla 35 (for_decl)
 
 
 Estado 224
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER • RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+   40 for_sec: for_iter •
+   41        | for_iter • COMMA for_sec
 
-    RIGHT_PARENT  desplazar e ir al estado 230
+    COMMA  desplazar e ir al estado 232
+
+    $default  reduce usando la regla 40 (for_sec)
 
 
 Estado 225
 
-   60 switch_line: CASE_KW exp_op • COLON $@4 block
-   92 exp_op: exp_op • OP_ADD exp_op
-   93       | exp_op • OP_SUB exp_op
-   94       | exp_op • OP_MUL exp_op
-   95       | exp_op • OP_DIV exp_op
-   96       | exp_op • OP_MOD exp_op
-   98       | exp_op • OP_GT exp_op
-   99       | exp_op • OP_LT exp_op
-  100       | exp_op • OP_GTE exp_op
-  101       | exp_op • OP_LTE exp_op
-  102       | exp_op • OP_EQ exp_op
-  103       | exp_op • OP_NEQ exp_op
-  104       | exp_op • OP_AND exp_op
-  105       | exp_op • OP_OR exp_op
+   42 for_iter: inc_dec •
+
+    $default  reduce usando la regla 42 (for_iter)
+
+
+Estado 226
+
+   43 for_iter: asingn •
+
+    $default  reduce usando la regla 43 (for_iter)
+
+
+Estado 227
+
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER • RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET
+
+    RIGHT_PARENT  desplazar e ir al estado 233
+
+
+Estado 228
+
+   62 switch_line: CASE_KW exp_op • COLON $@4 block
+   94 exp_op: exp_op • OP_ADD exp_op
+   95       | exp_op • OP_SUB exp_op
+   96       | exp_op • OP_MUL exp_op
+   97       | exp_op • OP_DIV exp_op
+   98       | exp_op • OP_MOD exp_op
+  100       | exp_op • OP_GT exp_op
+  101       | exp_op • OP_LT exp_op
+  102       | exp_op • OP_GTE exp_op
+  103       | exp_op • OP_LTE exp_op
+  104       | exp_op • OP_EQ exp_op
+  105       | exp_op • OP_NEQ exp_op
+  106       | exp_op • OP_AND exp_op
+  107       | exp_op • OP_OR exp_op
 
     OP_ADD  desplazar e ir al estado 85
     OP_SUB  desplazar e ir al estado 86
@@ -3803,110 +3837,207 @@ Estado 225
     OP_LT   desplazar e ir al estado 95
     OP_GTE  desplazar e ir al estado 96
     OP_LTE  desplazar e ir al estado 97
-    COLON   desplazar e ir al estado 231
-
-
-Estado 226
-
-   62 switch_line: DEFAULT_KW COLON • $@5 block
-
-    $default  reduce usando la regla 61 ($@5)
-
-    $@5  ir al estado 232
-
-
-Estado 227
-
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 • RIGHT_BRACKET
-
-    RIGHT_BRACKET  desplazar e ir al estado 233
-
-
-Estado 228
-
-   58 switch_block: switch_block switch_line •
-
-    $default  reduce usando la regla 58 (switch_block)
+    COLON   desplazar e ir al estado 234
 
 
 Estado 229
 
-   39 for_sec: for_iter COMMA • for_sec
+   64 switch_line: DEFAULT_KW COLON • $@5 block
+
+    $default  reduce usando la regla 63 ($@5)
+
+    $@5  ir al estado 235
+
+
+Estado 230
+
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 • RIGHT_BRACKET
+
+    RIGHT_BRACKET  desplazar e ir al estado 236
+
+
+Estado 231
+
+   60 switch_block: switch_block switch_line •
+
+    $default  reduce usando la regla 60 (switch_block)
+
+
+Estado 232
+
+   41 for_sec: for_iter COMMA • for_sec
 
     OP_INC      desplazar e ir al estado 9
     OP_DEC      desplazar e ir al estado 10
     D_COLON     desplazar e ir al estado 11
     IDENTIFIER  desplazar e ir al estado 42
 
-    for_sec      ir al estado 234
-    for_iter     ir al estado 221
+    for_sec      ir al estado 237
+    for_iter     ir al estado 224
     var_value    ir al estado 21
-    inc_dec      ir al estado 222
+    inc_dec      ir al estado 225
     ops_inc_dec  ir al estado 23
-    asingn       ir al estado 223
-
-
-Estado 230
-
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT • LEFT_BRACKET block RIGHT_BRACKET
-
-    LEFT_BRACKET  desplazar e ir al estado 235
-
-
-Estado 231
-
-   60 switch_line: CASE_KW exp_op COLON • $@4 block
-
-    $default  reduce usando la regla 59 ($@4)
-
-    $@4  ir al estado 236
-
-
-Estado 232
-
-   62 switch_line: DEFAULT_KW COLON $@5 • block
-
-    $default  reduce usando la regla 14 (block)
-
-    block  ir al estado 237
+    asingn       ir al estado 226
 
 
 Estado 233
 
-   55 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET •
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT • LEFT_BRACKET block RIGHT_BRACKET
 
-    $default  reduce usando la regla 55 (switch_stmt)
+    LEFT_BRACKET  desplazar e ir al estado 238
 
 
 Estado 234
 
-   39 for_sec: for_iter COMMA for_sec •
+   62 switch_line: CASE_KW exp_op COLON • $@4 block
 
-    $default  reduce usando la regla 39 (for_sec)
+    $default  reduce usando la regla 61 ($@4)
+
+    $@4  ir al estado 239
 
 
 Estado 235
 
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET • block RIGHT_BRACKET
+   64 switch_line: DEFAULT_KW COLON $@5 • block
 
     $default  reduce usando la regla 14 (block)
 
-    block  ir al estado 238
+    block  ir al estado 240
 
 
 Estado 236
 
-   60 switch_line: CASE_KW exp_op COLON $@4 • block
+   57 switch_stmt: SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block $@3 RIGHT_BRACKET •
 
-    $default  reduce usando la regla 14 (block)
-
-    block  ir al estado 239
+    $default  reduce usando la regla 57 (switch_stmt)
 
 
 Estado 237
 
+   41 for_sec: for_iter COMMA for_sec •
+
+    $default  reduce usando la regla 41 (for_sec)
+
+
+Estado 238
+
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET • block RIGHT_BRACKET
+
+    $default  reduce usando la regla 14 (block)
+
+    block  ir al estado 241
+
+
+Estado 239
+
+   62 switch_line: CASE_KW exp_op COLON $@4 • block
+
+    $default  reduce usando la regla 14 (block)
+
+    block  ir al estado 242
+
+
+Estado 240
+
    15 block: block • block_line
-   62 switch_line: DEFAULT_KW COLON $@5 block •
+   64 switch_line: DEFAULT_KW COLON $@5 block •
+
+    CHAR_KW     desplazar e ir al estado 3
+    INT_KW      desplazar e ir al estado 4
+    FLOAT_KW    desplazar e ir al estado 5
+    BOOL_KW     desplazar e ir al estado 6
+    STRING_KW   desplazar e ir al estado 7
+    IF_KW       desplazar e ir al estado 129
+    SWITCH_KW   desplazar e ir al estado 130
+    FOR_KW      desplazar e ir al estado 131
+    WHILE_KW    desplazar e ir al estado 132
+    DO_KW       desplazar e ir al estado 133
+    BREAK_KW    desplazar e ir al estado 134
+    RETURN_KW   desplazar e ir al estado 135
+    TRY_KW      desplazar e ir al estado 136
+    THROW_KW    desplazar e ir al estado 137
+    OP_INC      desplazar e ir al estado 9
+    OP_DEC      desplazar e ir al estado 10
+    D_COLON     desplazar e ir al estado 11
+    IDENTIFIER  desplazar e ir al estado 12
+    EOL         desplazar e ir al estado 139
+
+    $default  reduce usando la regla 64 (switch_line)
+
+    block_line   ir al estado 140
+    block_exp    ir al estado 141
+    rtrn         ir al estado 142
+    throw        ir al estado 143
+    loop         ir al estado 144
+    while_exp    ir al estado 145
+    conditional  ir al estado 146
+    if_els_stmt  ir al estado 147
+    if_stmt      ir al estado 148
+    switch_stmt  ir al estado 149
+    exception    ir al estado 150
+    try_catch    ir al estado 151
+    instance     ir al estado 152
+    inst_id      ir al estado 19
+    type         ir al estado 20
+    var_value    ir al estado 21
+    inc_dec      ir al estado 153
+    ops_inc_dec  ir al estado 23
+    func_call    ir al estado 154
+    asingn       ir al estado 155
+
+
+Estado 241
+
+   15 block: block • block_line
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block • RIGHT_BRACKET
+
+    CHAR_KW        desplazar e ir al estado 3
+    INT_KW         desplazar e ir al estado 4
+    FLOAT_KW       desplazar e ir al estado 5
+    BOOL_KW        desplazar e ir al estado 6
+    STRING_KW      desplazar e ir al estado 7
+    IF_KW          desplazar e ir al estado 129
+    SWITCH_KW      desplazar e ir al estado 130
+    FOR_KW         desplazar e ir al estado 131
+    WHILE_KW       desplazar e ir al estado 132
+    DO_KW          desplazar e ir al estado 133
+    BREAK_KW       desplazar e ir al estado 134
+    RETURN_KW      desplazar e ir al estado 135
+    TRY_KW         desplazar e ir al estado 136
+    THROW_KW       desplazar e ir al estado 137
+    OP_INC         desplazar e ir al estado 9
+    OP_DEC         desplazar e ir al estado 10
+    RIGHT_BRACKET  desplazar e ir al estado 243
+    D_COLON        desplazar e ir al estado 11
+    IDENTIFIER     desplazar e ir al estado 12
+    EOL            desplazar e ir al estado 139
+
+    block_line   ir al estado 140
+    block_exp    ir al estado 141
+    rtrn         ir al estado 142
+    throw        ir al estado 143
+    loop         ir al estado 144
+    while_exp    ir al estado 145
+    conditional  ir al estado 146
+    if_els_stmt  ir al estado 147
+    if_stmt      ir al estado 148
+    switch_stmt  ir al estado 149
+    exception    ir al estado 150
+    try_catch    ir al estado 151
+    instance     ir al estado 152
+    inst_id      ir al estado 19
+    type         ir al estado 20
+    var_value    ir al estado 21
+    inc_dec      ir al estado 153
+    ops_inc_dec  ir al estado 23
+    func_call    ir al estado 154
+    asingn       ir al estado 155
+
+
+Estado 242
+
+   15 block: block • block_line
+   62 switch_line: CASE_KW exp_op COLON $@4 block •
 
     CHAR_KW     desplazar e ir al estado 3
     INT_KW      desplazar e ir al estado 4
@@ -3952,105 +4083,8 @@ Estado 237
     asingn       ir al estado 155
 
 
-Estado 238
+Estado 243
 
-   15 block: block • block_line
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block • RIGHT_BRACKET
+   67 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET •
 
-    CHAR_KW        desplazar e ir al estado 3
-    INT_KW         desplazar e ir al estado 4
-    FLOAT_KW       desplazar e ir al estado 5
-    BOOL_KW        desplazar e ir al estado 6
-    STRING_KW      desplazar e ir al estado 7
-    IF_KW          desplazar e ir al estado 129
-    SWITCH_KW      desplazar e ir al estado 130
-    FOR_KW         desplazar e ir al estado 131
-    WHILE_KW       desplazar e ir al estado 132
-    DO_KW          desplazar e ir al estado 133
-    BREAK_KW       desplazar e ir al estado 134
-    RETURN_KW      desplazar e ir al estado 135
-    TRY_KW         desplazar e ir al estado 136
-    THROW_KW       desplazar e ir al estado 137
-    OP_INC         desplazar e ir al estado 9
-    OP_DEC         desplazar e ir al estado 10
-    RIGHT_BRACKET  desplazar e ir al estado 240
-    D_COLON        desplazar e ir al estado 11
-    IDENTIFIER     desplazar e ir al estado 12
-    EOL            desplazar e ir al estado 139
-
-    block_line   ir al estado 140
-    block_exp    ir al estado 141
-    rtrn         ir al estado 142
-    throw        ir al estado 143
-    loop         ir al estado 144
-    while_exp    ir al estado 145
-    conditional  ir al estado 146
-    if_els_stmt  ir al estado 147
-    if_stmt      ir al estado 148
-    switch_stmt  ir al estado 149
-    exception    ir al estado 150
-    try_catch    ir al estado 151
-    instance     ir al estado 152
-    inst_id      ir al estado 19
-    type         ir al estado 20
-    var_value    ir al estado 21
-    inc_dec      ir al estado 153
-    ops_inc_dec  ir al estado 23
-    func_call    ir al estado 154
-    asingn       ir al estado 155
-
-
-Estado 239
-
-   15 block: block • block_line
-   60 switch_line: CASE_KW exp_op COLON $@4 block •
-
-    CHAR_KW     desplazar e ir al estado 3
-    INT_KW      desplazar e ir al estado 4
-    FLOAT_KW    desplazar e ir al estado 5
-    BOOL_KW     desplazar e ir al estado 6
-    STRING_KW   desplazar e ir al estado 7
-    IF_KW       desplazar e ir al estado 129
-    SWITCH_KW   desplazar e ir al estado 130
-    FOR_KW      desplazar e ir al estado 131
-    WHILE_KW    desplazar e ir al estado 132
-    DO_KW       desplazar e ir al estado 133
-    BREAK_KW    desplazar e ir al estado 134
-    RETURN_KW   desplazar e ir al estado 135
-    TRY_KW      desplazar e ir al estado 136
-    THROW_KW    desplazar e ir al estado 137
-    OP_INC      desplazar e ir al estado 9
-    OP_DEC      desplazar e ir al estado 10
-    D_COLON     desplazar e ir al estado 11
-    IDENTIFIER  desplazar e ir al estado 12
-    EOL         desplazar e ir al estado 139
-
-    $default  reduce usando la regla 60 (switch_line)
-
-    block_line   ir al estado 140
-    block_exp    ir al estado 141
-    rtrn         ir al estado 142
-    throw        ir al estado 143
-    loop         ir al estado 144
-    while_exp    ir al estado 145
-    conditional  ir al estado 146
-    if_els_stmt  ir al estado 147
-    if_stmt      ir al estado 148
-    switch_stmt  ir al estado 149
-    exception    ir al estado 150
-    try_catch    ir al estado 151
-    instance     ir al estado 152
-    inst_id      ir al estado 19
-    type         ir al estado 20
-    var_value    ir al estado 21
-    inc_dec      ir al estado 153
-    ops_inc_dec  ir al estado 23
-    func_call    ir al estado 154
-    asingn       ir al estado 155
-
-
-Estado 240
-
-   65 try_catch: TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET •
-
-    $default  reduce usando la regla 65 (try_catch)
+    $default  reduce usando la regla 67 (try_catch)

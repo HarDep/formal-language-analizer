@@ -209,16 +209,16 @@ in          :   /* empty */ | in line;
 
 line        :   EOL | exp EOL;
 
-exp         :   instance | function | inc_dec | func_call | asingn;
+exp         :   instance | func | inc_dec | func_call | asingn;
 
-function    :   func_dec std_blck_d {
+func        :   func_dec std_block_d {
     if (functType != 0 && !hasReturn) {
         printf("Logical error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
     }
 };
 
-std_blck_d  :   LEFT_BRACKET { initBlock(); } block RIGHT_BRACKET { endBlock(); };
+std_block_d :   LEFT_BRACKET { initBlock(); } block RIGHT_BRACKET { endBlock(); };
 
 func_dec    :   FUNCTION_KW IDENTIFIER func_params func_type { addSymb($2, $4, true); };
 
@@ -242,15 +242,15 @@ block_exp   :   instance | BREAK_KW | inc_dec | func_call | asingn | loop | cond
             lineNumber);
         hasErrors = true;
     }
-} | throw;
+} | throw_dec;
 
 rtrn        :   RETURN_KW exp_op { $$ = $2; } | RETURN_KW { $$ = 0; };
 
-throw       :   THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT | THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT;
+throw_dec   :   THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT | THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT;
 
-loop        :   FOR_KW LEFT_PARENT for_decl RIGHT_PARENT std_blck_d
-            |   while_exp std_blck_d
-            |   DO_KW std_blck_d while_exp;
+loop        :   FOR_KW LEFT_PARENT for_decl RIGHT_PARENT std_block_d
+            |   while_exp std_block_d
+            |   DO_KW std_block_d while_exp;
 
 for_decl    :   for_vrs_dec COLON for_cond COLON for_sec;
 
@@ -293,9 +293,9 @@ if_stmt     :   IF_KW LEFT_PARENT exp_op {
         printf("Logical error at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
-} RIGHT_PARENT std_blck_d;
+} RIGHT_PARENT std_block_d;
 
-else_stmt   :   ELSE_KW std_blck_d;
+else_stmt   :   ELSE_KW std_block_d;
 
 els_if_stmt :   ELSE_KW if_stmt | els_if_stmt ELSE_KW if_stmt | els_if_stmt else_stmt;
 
@@ -430,9 +430,9 @@ func_arg    :   IDENTIFIER COLON exp_op | exp_op;
 
 asingn      :   var_value OP_ASSIGN exp_op { singleAsignation($1, $3); }
             |   var_value OP_ADD_ASSIGN exp_op { checkSumAsignation($1, $3); }
-            |   var_value ops_assign exp_op { checkAsignation($1, $3); };
+            |   var_value ops_asingn exp_op { checkAsignation($1, $3); };
 
-ops_assign  :   OP_SUB_ASSIGN | OP_MUL_ASSIGN | OP_DIV_ASSIGN | OP_MOD_ASSIGN;
+ops_asingn  :   OP_SUB_ASSIGN | OP_MUL_ASSIGN | OP_DIV_ASSIGN | OP_MOD_ASSIGN;
 %%
 
 void yyerror() {

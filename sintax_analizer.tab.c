@@ -354,15 +354,15 @@ enum yysymbol_kind_t
   YYSYMBOL_in = 67,                        /* in  */
   YYSYMBOL_line = 68,                      /* line  */
   YYSYMBOL_exp = 69,                       /* exp  */
-  YYSYMBOL_function = 70,                  /* function  */
-  YYSYMBOL_std_blck_d = 71,                /* std_blck_d  */
+  YYSYMBOL_func = 70,                      /* func  */
+  YYSYMBOL_std_block_d = 71,               /* std_block_d  */
   YYSYMBOL_72_1 = 72,                      /* $@1  */
   YYSYMBOL_func_dec = 73,                  /* func_dec  */
   YYSYMBOL_block = 74,                     /* block  */
   YYSYMBOL_block_line = 75,                /* block_line  */
   YYSYMBOL_block_exp = 76,                 /* block_exp  */
   YYSYMBOL_rtrn = 77,                      /* rtrn  */
-  YYSYMBOL_throw = 78,                     /* throw  */
+  YYSYMBOL_throw_dec = 78,                 /* throw_dec  */
   YYSYMBOL_loop = 79,                      /* loop  */
   YYSYMBOL_for_decl = 80,                  /* for_decl  */
   YYSYMBOL_for_vrs_dec = 81,               /* for_vrs_dec  */
@@ -401,7 +401,7 @@ enum yysymbol_kind_t
   YYSYMBOL_func_args = 114,                /* func_args  */
   YYSYMBOL_func_arg = 115,                 /* func_arg  */
   YYSYMBOL_asingn = 116,                   /* asingn  */
-  YYSYMBOL_ops_assign = 117                /* ops_assign  */
+  YYSYMBOL_ops_asingn = 117                /* ops_asingn  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -835,15 +835,15 @@ static const char *const yytname[] =
   "RIGHT_PARENT", "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_SQUARE",
   "RIGHT_SQUARE", "COMMA", "DOT", "D_COLON", "COLON", "CHAR", "STRING",
   "NUM", "NUM_DEC", "IDENTIFIER", "EOL", "$accept", "in", "line", "exp",
-  "function", "std_blck_d", "$@1", "func_dec", "block", "block_line",
-  "block_exp", "rtrn", "throw", "loop", "for_decl", "for_vrs_dec",
+  "func", "std_block_d", "$@1", "func_dec", "block", "block_line",
+  "block_exp", "rtrn", "throw_dec", "loop", "for_decl", "for_vrs_dec",
   "for_var", "for_cond", "for_sec", "for_iter", "while_exp", "conditional",
   "if_els_stmt", "if_stmt", "$@2", "else_stmt", "els_if_stmt",
   "switch_stmt", "$@3", "switch_block", "switch_line", "$@4", "$@5",
   "exception", "try_catch", "func_type", "func_params", "params_sec",
   "param", "instance", "inst_id", "type", "value_data", "var_value",
   "exp_op", "inc_dec", "ops_inc_dec", "func_call", "func_args", "func_arg",
-  "asingn", "ops_assign", YY_NULLPTR
+  "asingn", "ops_asingn", YY_NULLPTR
 };
 
 static const char *
@@ -1598,9 +1598,9 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 11: /* function: func_dec std_blck_d  */
+  case 11: /* func: func_dec std_block_d  */
 #line 214 "sintax_analizer.y"
-                                    {
+                                     {
     if (functType != 0 && !hasReturn) {
         printf("Logical error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
@@ -1615,7 +1615,7 @@ yyreduce:
 #line 1616 "sintax_analizer.tab.c"
     break;
 
-  case 13: /* std_blck_d: LEFT_BRACKET $@1 block RIGHT_BRACKET  */
+  case 13: /* std_block_d: LEFT_BRACKET $@1 block RIGHT_BRACKET  */
 #line 221 "sintax_analizer.y"
                                                                   { endBlock(); }
 #line 1622 "sintax_analizer.tab.c"
@@ -2113,7 +2113,7 @@ yyreduce:
 #line 2114 "sintax_analizer.tab.c"
     break;
 
-  case 133: /* asingn: var_value ops_assign exp_op  */
+  case 133: /* asingn: var_value ops_asingn exp_op  */
 #line 433 "sintax_analizer.y"
                                             { checkAsignation((yyvsp[-2].ival), (yyvsp[0].ival)); }
 #line 2120 "sintax_analizer.tab.c"

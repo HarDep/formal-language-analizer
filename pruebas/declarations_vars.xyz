@@ -1,9 +1,9 @@
 
 char c = 'a'
 
-int n = 9
+int n = -(-5)
 
-float d = 3.14
+float d = 3.
 
 bool b = true
 

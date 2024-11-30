@@ -1,9 +1,11 @@
 
-rm sintax_analizer.tab.c sintax_analizer.tab.h lex.yy.c analize_code.out
+fliesToRemove=$(find . -name "sintax_analizer.tab.c" -o -name "sintax_analizer.tab.h" -o -name "lex.yy.c" -o -name "analize_code.out")
+
+rm $fliesToRemove
 
 bison -d -v sintax_analizer.y
 
-lex lexical_analizer.l
+flex lexical_analizer.l
 
 gcc sintax_analizer.tab.c lex.yy.c -lfl -o analize_code.out
 
@@ -13,12 +15,12 @@ if [ $# -eq 0 ]; then
   exit 0
 fi
 
-archivo="$1"
+file="$1"
 
-if [ -f "$archivo" ]; then
-  echo "Analizando archivo: $archivo"
+if [ -f "$file" ]; then
+  echo "Analizando archivo: $file"
   echo  "Resultado de analisis:"
-  ./analize_code.out "$archivo"
+  ./analize_code.out "$file"
 else
-  echo "El archivo $archivo no existe"
+  echo "El archivo $file no existe"
 fi

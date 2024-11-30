@@ -1,0 +1,30 @@
+
+if [ ! -f "analize_code.out" ]; then
+  echo "No se ha generado el analizador"
+  ./exec
+fi
+
+echo "Comenzando pruebas..."
+
+directory="./pruebas"
+count=0
+average_time=0
+
+for file in "$directory"/*.xyz; do
+  count=$((count+1))
+  echo ""
+  echo "Prueba $count (./pruebas/$(basename $file)):"
+  cat $file.expt-out
+  echo ""
+  echo "Resultado obtenido:"
+  start_time=$(date +%s%3N)
+  ./analize_code.out ./pruebas/$(basename $file)
+  end_time=$(date +%s%3N)
+  elapsed_time=$((end_time - start_time))
+  average_time=$((average_time + elapsed_time))
+  echo "Duracion de prueba: $elapsed_time milisegundos."
+done
+
+echo ""
+echo "Pruebas terminadas"
+echo "Tiempo promedio de duracion de prueba: $((average_time/count)) milisegundos."

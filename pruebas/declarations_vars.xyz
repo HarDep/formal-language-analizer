@@ -1,0 +1,10 @@
+
+char c = 'a'
+
+int n = 9
+
+float d = 3.14
+
+bool b = true
+
+string s = "hola"

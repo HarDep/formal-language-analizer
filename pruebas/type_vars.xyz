@@ -1,0 +1,10 @@
+
+char c = 4
+
+int n = 4.6
+
+float d = "ddd"
+
+bool b = 3
+
+string s = 3.4

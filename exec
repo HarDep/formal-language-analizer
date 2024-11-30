@@ -1,5 +1,24 @@
+
 rm sintax_analizer.tab.c sintax_analizer.tab.h lex.yy.c analize_code.out
+
 bison -d -v sintax_analizer.y
+
 lex lexical_analizer.l
+
 gcc sintax_analizer.tab.c lex.yy.c -lfl -o analize_code.out
-./analize_code.out code.xyz
+
+echo "Analizador generado"
+
+if [ $# -eq 0 ]; then
+  exit 0
+fi
+
+archivo="$1"
+
+if [ -f "$archivo" ]; then
+  echo "Analizando archivo: $archivo"
+  echo  "Resultado de analisis:"
+  ./analize_code.out "$archivo"
+else
+  echo "El archivo $archivo no existe"
+fi

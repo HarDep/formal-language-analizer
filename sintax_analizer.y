@@ -27,7 +27,7 @@ SYM syms[100];
 int symCount = 0;
 int checkNumsOperation(int a, int b) {
     if (a <= 1 || a >= 4|| b <= 1 || b >= 4) {
-        printf("Logical error at line %d: invalid operation expression, the values must be int or float\n", lineNumber);
+        printf("Incompatible type expression at line %d: invalid operation expression, the values must be int or float\n", lineNumber);
         hasErrors = true;
         return 0;
     }
@@ -35,7 +35,7 @@ int checkNumsOperation(int a, int b) {
 }
 int checkComparison(int a, int b) {
     if (a <= 1 || a >= 4|| b <= 1 || b >= 4) {
-        printf("Logical error at line %d: invalid comparison expression, the values must be int or float\n", lineNumber);
+        printf("Incompatible type expression at line %d: invalid comparison expression, the values must be int or float\n", lineNumber);
         hasErrors = true;
     }
     return 4;
@@ -50,7 +50,7 @@ int checkValuesComparison(int a, int b) {
     if ((a == 2 && b == 3) || (a == 3 && b == 2)) {
         return 4;
     }
-    printf("Logical error at line %d: invalid comparison expression, incompatible type comparation\n", lineNumber);
+    printf("Incompatible type expression at line %d: invalid comparison expression, incompatible type comparation\n", lineNumber);
     hasErrors = true;
     return 4;
 }
@@ -95,7 +95,7 @@ int checkSumAsignation(int a, int b) {
 }
 int checkLogicOperation(int a, int b) {
     if (a != 4 || b != 4) {
-        printf("Logical error at line %d: invalid logic operation expression, the values must be bool\n", lineNumber);
+        printf("Incompatible type expression at line %d: invalid logic operation expression, the values must be bool\n", lineNumber);
         hasErrors = true;
     }
     return 4;
@@ -190,16 +190,17 @@ void endBlock() {
     int ival;
     char *sval;
 }
-%token CHAR_KW INT_KW FLOAT_KW BOOL_KW STRING_KW VOID_KW IF_KW ELSE_KW SWITCH_KW CASE_KW DEFAULT_KW
-%token FOR_KW WHILE_KW DO_KW BREAK_KW RETURN_KW TRUE_KW FALSE_KW FUNCTION_KW TRY_KW CATCH_KW FINALLY_KW
-%token THROW_KW NULL_KW OP_INC OP_DEC
-%left OP_ADD OP_SUB OP_MUL OP_DIV OP_MOD
-%left OP_AND OP_OR
-%right OP_NOT
-%left OP_EQ OP_NEQ OP_GT OP_LT OP_GTE OP_LTE
 %right OP_ASSIGN OP_ADD_ASSIGN OP_SUB_ASSIGN OP_MUL_ASSIGN OP_DIV_ASSIGN OP_MOD_ASSIGN
-%precedence UMINUS
+%left OP_AND OP_OR
+%left OP_EQ OP_NEQ
+%left OP_GT OP_LT OP_GTE OP_LTE
+%left OP_ADD OP_SUB
+%left OP_MUL OP_DIV OP_MOD
+%right OP_NOT UMINUS
+%token THROW_KW NULL_KW OP_INC OP_DEC
 %token LEFT_PARENT RIGHT_PARENT LEFT_BRACKET RIGHT_BRACKET LEFT_SQUARE RIGHT_SQUARE COMMA DOT D_COLON COLON
+%token FOR_KW WHILE_KW DO_KW BREAK_KW RETURN_KW TRUE_KW FALSE_KW FUNCTION_KW TRY_KW CATCH_KW FINALLY_KW
+%token CHAR_KW INT_KW FLOAT_KW BOOL_KW STRING_KW VOID_KW IF_KW ELSE_KW SWITCH_KW CASE_KW DEFAULT_KW
 %token <ival> CHAR STRING NUM NUM_DEC
 %token <sval> IDENTIFIER
 %token EOL
@@ -213,7 +214,7 @@ exp         :   instance | func | inc_dec | func_call | asingn;
 
 func        :   func_dec std_block_d {
     if (functType != 0 && !hasReturn) {
-        printf("Logical error at line %d: the function has no a return value\n", lineNumber);
+        printf("Missing return error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
     }
 };
@@ -232,10 +233,10 @@ block_exp   :   instance | BREAK_KW | inc_dec | func_call | asingn | loop | cond
         hasReturn = true;
     }
     if (functType != 0 && $1 == 0) {
-        printf("Logical error at line %d: the function has no a return value\n", lineNumber);
+        printf("Incompatible type error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
     } else if (functType == 0 && $1 != 0) {
-        printf("Logical error at line %d: the function is void and has a return value\n", lineNumber);
+        printf("Incompatible type error at line %d: the function is void and has a return value\n", lineNumber);
         hasErrors = true;
     } else if (functType != 0 && functType != $1) {
         printf("Incompatible type error at line %d: return data value of function is not compatible with function return type\n",
@@ -267,7 +268,7 @@ for_var     :   IDENTIFIER OP_ASSIGN exp_op {
 
 for_cond    :   exp_op {
     if($1 != 4 ) {
-        printf("Logical error at line %d: the condition used in for iteration is not a bool value\n", 
+        printf("Incompatible type expression at line %d: the condition used in for iteration is not a bool value\n", 
             lineNumber);
         hasErrors = true;
     }
@@ -279,7 +280,7 @@ for_iter    :   inc_dec | asingn;
 
 while_exp   :   WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT {
     if ($3 != 4) {
-        printf("Logical error at line %d: the condition is not a bool value\n", lineNumber);
+        printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
 };
@@ -290,7 +291,7 @@ if_els_stmt :   if_stmt | if_stmt else_stmt | if_stmt els_if_stmt;
 
 if_stmt     :   IF_KW LEFT_PARENT exp_op {
     if ($3 != 4) {
-        printf("Logical error at line %d: the condition is not a bool value\n", lineNumber);
+        printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
 } RIGHT_PARENT std_block_d;
@@ -322,7 +323,7 @@ switch_line :   CASE_KW exp_op COLON { initBlock(); } block { endBlock(); $$ = $
             |   DEFAULT_KW COLON { initBlock(); } block {
     endBlock();
     if (hasDefaultCase) {
-        printf("Logical error at line %d: the switch has more than one default case\n", lineNumber);
+        printf("Definition error at line %d: the switch has more than one default case\n", lineNumber);
         hasErrors = true;
     }
     hasDefaultCase = true;
@@ -378,7 +379,7 @@ var_value   :   IDENTIFIER  { $$ = getSymbType($1, false); }
 
 exp_op      :   exp_op OP_ADD exp_op {
     if ($1 == 4 && $3 == 4) {
-        printf("Logical error at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
+        printf("Incompatible type expression at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
         hasErrors = true;
         $$ = 0;
     } else {
@@ -411,7 +412,7 @@ exp_op      :   exp_op OP_ADD exp_op {
             |   value_data { $$ = $1; }
             |   func_call { $$ = $1;
     if ($1 == 0) {
-        printf("Logical error at line %d: the function called has no a return value\n", lineNumber);
+        printf("Incompatible type error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }

@@ -805,11 +805,11 @@ static const yytype_int16 yyrline[] =
      342,   344,   346,   346,   348,   348,   350,   350,   350,   352,
      352,   360,   360,   370,   372,   373,   374,   375,   376,   378,
      379,   380,   381,   382,   383,   384,   386,   387,   389,   406,
-     414,   422,   435,   448,   456,   457,   458,   459,   460,   461,
-     462,   463,   464,   465,   466,   467,   468,   469,   470,   471,
-     472,   473,   479,   481,   481,   483,   483,   485,   486,   488,
-     488,   488,   490,   490,   492,   493,   494,   496,   496,   496,
-     496
+     414,   422,   435,   448,   456,   464,   472,   480,   488,   496,
+     504,   505,   506,   507,   508,   509,   510,   511,   512,   513,
+     514,   515,   521,   523,   523,   525,   525,   527,   528,   530,
+     530,   530,   532,   532,   534,   535,   536,   538,   538,   538,
+     538
 };
 #endif
 
@@ -2023,167 +2023,209 @@ yyreduce:
 
   case 104: /* exp_op: exp_op OP_GT exp_op  */
 #line 456 "sintax_analizer.y"
-                                    { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2028 "sintax_analizer.tab.c"
+                                    { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f > %.*f is always %s\n", lineNumber, dec1, (yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val > (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+#line 2035 "sintax_analizer.tab.c"
     break;
 
   case 105: /* exp_op: exp_op OP_LT exp_op  */
-#line 457 "sintax_analizer.y"
-                                    { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2034 "sintax_analizer.tab.c"
+#line 464 "sintax_analizer.y"
+                                    { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f < %.*f is always %s\n", lineNumber, dec1, (yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val < (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+#line 2048 "sintax_analizer.tab.c"
     break;
 
   case 106: /* exp_op: exp_op OP_GTE exp_op  */
-#line 458 "sintax_analizer.y"
-                                     { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2040 "sintax_analizer.tab.c"
+#line 472 "sintax_analizer.y"
+                                     { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f >= %.*f is always %s\n", lineNumber, dec1,(yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val >= (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+#line 2061 "sintax_analizer.tab.c"
     break;
 
   case 107: /* exp_op: exp_op OP_LTE exp_op  */
-#line 459 "sintax_analizer.y"
-                                     { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2046 "sintax_analizer.tab.c"
+#line 480 "sintax_analizer.y"
+                                     { (yyval.sdata).type = checkComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f <= %.*f is always %s\n", lineNumber, dec1,(yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val <= (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+#line 2074 "sintax_analizer.tab.c"
     break;
 
   case 108: /* exp_op: exp_op OP_EQ exp_op  */
-#line 460 "sintax_analizer.y"
-                                    { (yyval.sdata).type = checkValuesComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2052 "sintax_analizer.tab.c"
+#line 488 "sintax_analizer.y"
+                                    { (yyval.sdata).type = checkValuesComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f == %.*f is always %s\n", lineNumber, dec1,(yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val == (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+#line 2087 "sintax_analizer.tab.c"
     break;
 
   case 109: /* exp_op: exp_op OP_NEQ exp_op  */
-#line 461 "sintax_analizer.y"
-                                     { (yyval.sdata).type = checkValuesComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2058 "sintax_analizer.tab.c"
-    break;
-
-  case 110: /* exp_op: exp_op OP_AND exp_op  */
-#line 462 "sintax_analizer.y"
-                                     { (yyval.sdata).type = checkLogicOperation((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2064 "sintax_analizer.tab.c"
-    break;
-
-  case 111: /* exp_op: exp_op OP_OR exp_op  */
-#line 463 "sintax_analizer.y"
-                                    { (yyval.sdata).type = checkLogicOperation((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2070 "sintax_analizer.tab.c"
-    break;
-
-  case 112: /* exp_op: OP_NOT exp_op  */
-#line 464 "sintax_analizer.y"
-                              { (yyval.sdata).type = checkLogicOperation((yyvsp[0].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2076 "sintax_analizer.tab.c"
-    break;
-
-  case 113: /* exp_op: var_value OP_ASSIGN exp_op  */
-#line 465 "sintax_analizer.y"
-                                           { (yyval.sdata).type = singleAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2082 "sintax_analizer.tab.c"
-    break;
-
-  case 114: /* exp_op: var_value OP_ADD_ASSIGN exp_op  */
-#line 466 "sintax_analizer.y"
-                                               { (yyval.sdata).type = checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2088 "sintax_analizer.tab.c"
-    break;
-
-  case 115: /* exp_op: var_value OP_SUB_ASSIGN exp_op  */
-#line 467 "sintax_analizer.y"
-                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
-#line 2094 "sintax_analizer.tab.c"
-    break;
-
-  case 116: /* exp_op: var_value OP_MUL_ASSIGN exp_op  */
-#line 468 "sintax_analizer.y"
-                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 496 "sintax_analizer.y"
+                                     { (yyval.sdata).type = checkValuesComparison((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0;
+    if((yyvsp[-2].sdata).hasVal && (yyvsp[0].sdata).hasVal) {
+        int dec1 = (yyvsp[-2].sdata).type == 2 ? 0 : 7;
+        int dec2 = (yyvsp[0].sdata).type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f != %.*f is always %s\n", lineNumber, dec1,(yyvsp[-2].sdata).val, dec2, (yyvsp[0].sdata).val, (yyvsp[-2].sdata).val != (yyvsp[0].sdata).val ? "true" : "false");
+        hasErrors = true;
+    }
+}
 #line 2100 "sintax_analizer.tab.c"
     break;
 
-  case 117: /* exp_op: var_value OP_DIV_ASSIGN exp_op  */
-#line 469 "sintax_analizer.y"
-                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+  case 110: /* exp_op: exp_op OP_AND exp_op  */
+#line 504 "sintax_analizer.y"
+                                     { (yyval.sdata).type = checkLogicOperation((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
 #line 2106 "sintax_analizer.tab.c"
     break;
 
-  case 118: /* exp_op: var_value OP_MOD_ASSIGN exp_op  */
-#line 470 "sintax_analizer.y"
-                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+  case 111: /* exp_op: exp_op OP_OR exp_op  */
+#line 505 "sintax_analizer.y"
+                                    { (yyval.sdata).type = checkLogicOperation((yyvsp[-2].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
 #line 2112 "sintax_analizer.tab.c"
     break;
 
-  case 119: /* exp_op: LEFT_PARENT exp_op RIGHT_PARENT  */
-#line 471 "sintax_analizer.y"
-                                                { (yyval.sdata).type = (yyvsp[-1].sdata).type; (yyval.sdata).hasVal=(yyvsp[-1].sdata).hasVal; if((yyvsp[-1].sdata).hasVal) { (yyval.sdata).val = (yyvsp[-1].sdata).val; } }
+  case 112: /* exp_op: OP_NOT exp_op  */
+#line 506 "sintax_analizer.y"
+                              { (yyval.sdata).type = checkLogicOperation((yyvsp[0].sdata).type, (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
 #line 2118 "sintax_analizer.tab.c"
     break;
 
-  case 120: /* exp_op: value_data  */
-#line 472 "sintax_analizer.y"
-                           { (yyval.sdata).type = (yyvsp[0].sdata).type; (yyval.sdata).hasVal = (yyvsp[0].sdata).hasVal; if((yyvsp[0].sdata).hasVal) { (yyval.sdata).val = (yyvsp[0].sdata).val; }; }
+  case 113: /* exp_op: var_value OP_ASSIGN exp_op  */
+#line 507 "sintax_analizer.y"
+                                           { (yyval.sdata).type = singleAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
 #line 2124 "sintax_analizer.tab.c"
     break;
 
+  case 114: /* exp_op: var_value OP_ADD_ASSIGN exp_op  */
+#line 508 "sintax_analizer.y"
+                                               { (yyval.sdata).type = checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 2130 "sintax_analizer.tab.c"
+    break;
+
+  case 115: /* exp_op: var_value OP_SUB_ASSIGN exp_op  */
+#line 509 "sintax_analizer.y"
+                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 2136 "sintax_analizer.tab.c"
+    break;
+
+  case 116: /* exp_op: var_value OP_MUL_ASSIGN exp_op  */
+#line 510 "sintax_analizer.y"
+                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 2142 "sintax_analizer.tab.c"
+    break;
+
+  case 117: /* exp_op: var_value OP_DIV_ASSIGN exp_op  */
+#line 511 "sintax_analizer.y"
+                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 2148 "sintax_analizer.tab.c"
+    break;
+
+  case 118: /* exp_op: var_value OP_MOD_ASSIGN exp_op  */
+#line 512 "sintax_analizer.y"
+                                               { (yyval.sdata).type = checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); (yyval.sdata).hasVal=0; }
+#line 2154 "sintax_analizer.tab.c"
+    break;
+
+  case 119: /* exp_op: LEFT_PARENT exp_op RIGHT_PARENT  */
+#line 513 "sintax_analizer.y"
+                                                { (yyval.sdata).type = (yyvsp[-1].sdata).type; (yyval.sdata).hasVal=(yyvsp[-1].sdata).hasVal; if((yyvsp[-1].sdata).hasVal) { (yyval.sdata).val = (yyvsp[-1].sdata).val; } }
+#line 2160 "sintax_analizer.tab.c"
+    break;
+
+  case 120: /* exp_op: value_data  */
+#line 514 "sintax_analizer.y"
+                           { (yyval.sdata).type = (yyvsp[0].sdata).type; (yyval.sdata).hasVal = (yyvsp[0].sdata).hasVal; if((yyvsp[0].sdata).hasVal) { (yyval.sdata).val = (yyvsp[0].sdata).val; }; }
+#line 2166 "sintax_analizer.tab.c"
+    break;
+
   case 121: /* exp_op: func_call  */
-#line 473 "sintax_analizer.y"
+#line 515 "sintax_analizer.y"
                           { (yyval.sdata).type = (yyvsp[0].ival); (yyval.sdata).hasVal = 0;
     if ((yyvsp[0].ival) == 0) {
         printf("Incompatible type error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }
-#line 2135 "sintax_analizer.tab.c"
-    break;
-
-  case 122: /* exp_op: inc_dec  */
-#line 479 "sintax_analizer.y"
-                        { (yyval.sdata).type = (yyvsp[0].ival); (yyval.sdata).hasVal = 0; }
-#line 2141 "sintax_analizer.tab.c"
-    break;
-
-  case 123: /* inc_dec: var_value ops_inc_dec  */
-#line 481 "sintax_analizer.y"
-                                      { (yyval.ival) = checkIncrementDecrement((yyvsp[-1].ival)); }
-#line 2147 "sintax_analizer.tab.c"
-    break;
-
-  case 124: /* inc_dec: ops_inc_dec var_value  */
-#line 481 "sintax_analizer.y"
-                                                                                                    { (yyval.ival) = checkIncrementDecrement((yyvsp[0].ival)); }
-#line 2153 "sintax_analizer.tab.c"
-    break;
-
-  case 127: /* func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT  */
-#line 485 "sintax_analizer.y"
-                                                    { (yyval.ival) = getSymbType((yyvsp[-2].sval), true); }
-#line 2159 "sintax_analizer.tab.c"
-    break;
-
-  case 128: /* func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT  */
-#line 486 "sintax_analizer.y"
-                                                              { (yyval.ival) = getSymbType((yyvsp[-3].sval), true); }
-#line 2165 "sintax_analizer.tab.c"
-    break;
-
-  case 134: /* asingn: var_value OP_ASSIGN exp_op  */
-#line 492 "sintax_analizer.y"
-                                           { singleAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
-#line 2171 "sintax_analizer.tab.c"
-    break;
-
-  case 135: /* asingn: var_value OP_ADD_ASSIGN exp_op  */
-#line 493 "sintax_analizer.y"
-                                               { checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
 #line 2177 "sintax_analizer.tab.c"
     break;
 
-  case 136: /* asingn: var_value ops_asingn exp_op  */
-#line 494 "sintax_analizer.y"
-                                            { checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
+  case 122: /* exp_op: inc_dec  */
+#line 521 "sintax_analizer.y"
+                        { (yyval.sdata).type = (yyvsp[0].ival); (yyval.sdata).hasVal = 0; }
 #line 2183 "sintax_analizer.tab.c"
     break;
 
+  case 123: /* inc_dec: var_value ops_inc_dec  */
+#line 523 "sintax_analizer.y"
+                                      { (yyval.ival) = checkIncrementDecrement((yyvsp[-1].ival)); }
+#line 2189 "sintax_analizer.tab.c"
+    break;
 
-#line 2187 "sintax_analizer.tab.c"
+  case 124: /* inc_dec: ops_inc_dec var_value  */
+#line 523 "sintax_analizer.y"
+                                                                                                    { (yyval.ival) = checkIncrementDecrement((yyvsp[0].ival)); }
+#line 2195 "sintax_analizer.tab.c"
+    break;
+
+  case 127: /* func_call: IDENTIFIER LEFT_PARENT RIGHT_PARENT  */
+#line 527 "sintax_analizer.y"
+                                                    { (yyval.ival) = getSymbType((yyvsp[-2].sval), true); }
+#line 2201 "sintax_analizer.tab.c"
+    break;
+
+  case 128: /* func_call: IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT  */
+#line 528 "sintax_analizer.y"
+                                                              { (yyval.ival) = getSymbType((yyvsp[-3].sval), true); }
+#line 2207 "sintax_analizer.tab.c"
+    break;
+
+  case 134: /* asingn: var_value OP_ASSIGN exp_op  */
+#line 534 "sintax_analizer.y"
+                                           { singleAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
+#line 2213 "sintax_analizer.tab.c"
+    break;
+
+  case 135: /* asingn: var_value OP_ADD_ASSIGN exp_op  */
+#line 535 "sintax_analizer.y"
+                                               { checkSumAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
+#line 2219 "sintax_analizer.tab.c"
+    break;
+
+  case 136: /* asingn: var_value ops_asingn exp_op  */
+#line 536 "sintax_analizer.y"
+                                            { checkAsignation((yyvsp[-2].ival), (yyvsp[0].sdata).type); }
+#line 2225 "sintax_analizer.tab.c"
+    break;
+
+
+#line 2229 "sintax_analizer.tab.c"
 
       default: break;
     }
@@ -2376,7 +2418,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 497 "sintax_analizer.y"
+#line 539 "sintax_analizer.y"
 
 
 void yyerror() {

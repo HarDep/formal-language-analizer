@@ -453,12 +453,54 @@ exp_op      :   exp_op OP_ADD exp_op {
         $$.hasVal = 0;
     }
 }
-            |   exp_op OP_GT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
-            |   exp_op OP_LT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
-            |   exp_op OP_GTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
-            |   exp_op OP_LTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
-            |   exp_op OP_EQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0; }
-            |   exp_op OP_NEQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_GT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f > %.*f is always %s\n", lineNumber, dec1, $1.val, dec2, $3.val, $1.val > $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+            |   exp_op OP_LT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f < %.*f is always %s\n", lineNumber, dec1, $1.val, dec2, $3.val, $1.val < $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+            |   exp_op OP_GTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f >= %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val >= $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+            |   exp_op OP_LTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f <= %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val <= $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+            |   exp_op OP_EQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f == %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val == $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
+            |   exp_op OP_NEQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0;
+    if($1.hasVal && $3.hasVal) {
+        int dec1 = $1.type == 2 ? 0 : 7;
+        int dec2 = $3.type == 2 ? 0 : 7;
+        printf("Logical error at line %d: value of comparison %.*f != %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val != $3.val ? "true" : "false");
+        hasErrors = true;
+    }
+}
             |   exp_op OP_AND exp_op { $$.type = checkLogicOperation($1.type, $3.type); $$.hasVal=0; }
             |   exp_op OP_OR exp_op { $$.type = checkLogicOperation($1.type, $3.type); $$.hasVal=0; }
             |   OP_NOT exp_op { $$.type = checkLogicOperation($2.type, $2.type); $$.hasVal=0; }

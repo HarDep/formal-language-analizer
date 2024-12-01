@@ -1,9 +1,11 @@
 
+// probar declaraciones correctas en cada tipo
+
 char c = 'a'
 
 int n = -(-5)
 
-float d = 3.
+float d = 3.0
 
 bool b = true
 

@@ -1,0 +1,17 @@
+
+// probar alcance incorrecto para variables locales y globales, y funciones
+
+main()  // Error esperado aqui, la funcion main no ha sido declarada
+
+if(true){
+    while(false){
+        int x = 5
+    }
+    x = 10  // Error esperado aquí, el alcance de x es local en el while
+    ::a++   // Error esperado aqui, la variable global no ha sido declarada
+}
+
+int a = 10
+
+function main(): void {
+}

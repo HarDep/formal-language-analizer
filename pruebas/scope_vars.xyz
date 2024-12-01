@@ -1,0 +1,12 @@
+
+// probar alcance de variables globales y locales, y funciones
+
+int x = 5
+
+function test() : void {
+    string x = "cad"
+    ::x = 20
+    x+= "otra cad"
+}
+
+test()

@@ -1,0 +1,3 @@
+Prueba para validar el alcance incorrecto de variables globales y locales, y funciones
+Resultado esperado:
+Errores de acceso

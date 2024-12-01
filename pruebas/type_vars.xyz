@@ -1,10 +1,12 @@
 
-char c = 4
+// probar declaraciones de variables con valores incorrectos para el tipo
 
-int n = 4.6
+char c = 4 // Error esperado aqui, el tipo de c es char
 
-float d = "ddd"
+int n = 4.6 // Error esperado aqui, el tipo de n es int
 
-bool b = 3
+float d = "ddd" // Error esperado aqui, el tipo de d es float
 
-string s = 3.4
+bool b = 3 // Error esperado aqui, el tipo de b es bool
+
+string s = 3.4 // Error esperado aqui, el tipo de s es string

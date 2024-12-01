@@ -32,7 +32,7 @@ string s = 'a'
 
 function sum(a:int, 
             b:int = 2) : int {
-    bool boolv = (!true || false) && false && (5>=5) && (7+8+8)>=0
+    bool boolv = (!true || false) && false && (a>=5) && (7+8+8)>=b
     while (boolv) {
         int c = sum(a: 5, sum2())
         c=5
@@ -46,7 +46,7 @@ function sum(a:int,
     }
     do {
         //t++
-    } while (5==4)
+    } while (a==4)
     try {
 
     } catch (error) {
@@ -56,7 +56,7 @@ function sum(a:int,
         for (i = 2, u = 9: i < 5: i++, u += 2) {
             while (true) {
                 throw Exception()
-                if(1==1) {
+                if(1==b) {
                     i = -8
                     break
                 }

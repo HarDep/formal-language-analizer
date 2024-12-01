@@ -363,23 +363,23 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[171] =
     {   0,
         0,    0,   69,   67,   66,   65,   45,   67,   39,   67,
-       67,   50,   51,   35,   30,   56,   33,   57,   37,   64,
-       59,   49,   43,   47,   60,   54,   55,   60,   60,   60,
-       60,   60,   60,   60,   60,   60,   60,   60,   60,   52,
-       67,   53,    0,    0,   44,    0,   62,    0,   38,   40,
-        0,   62,    0,    3,   34,   28,   29,   31,   32,    2,
-        1,   36,   63,   64,   58,   48,   42,   46,   60,   60,
-       60,   60,   60,   60,   60,   17,   60,   60,   60,   60,
-       60,   60,   10,   60,   60,   60,   60,   60,   60,   60,
-       60,   60,   41,    3,    0,   61,    0,    3,    2,    2,
+       67,   50,   51,   35,   30,   56,   33,   64,   37,   63,
+       58,   49,   43,   47,   59,   54,   55,   59,   59,   59,
+       59,   59,   59,   59,   59,   59,   59,   59,   59,   52,
+       67,   53,    0,    0,   44,    0,   61,    0,   38,   40,
+        0,   61,    0,    3,   34,   28,   29,   31,   32,    2,
+        1,   36,    0,   63,   57,   48,   42,   46,   59,   59,
+       59,   59,   59,   59,   59,   17,   59,   59,   59,   59,
+       59,   59,   10,   59,   59,   59,   59,   59,   59,   59,
+       59,   59,   41,    3,    0,   60,    0,    3,    2,    2,
 
-        2,    1,    1,   63,   60,   60,   60,   60,   60,   60,
-       60,   60,   60,   60,   15,   60,    5,   60,   60,   60,
-       60,   60,   60,   23,   60,   60,   62,    1,    7,   60,
-       13,   60,    4,   60,   11,   60,   60,   60,   60,   27,
-       60,   60,   60,   60,   20,    9,   60,   19,   24,   60,
-       21,   60,    6,   60,   60,   60,   60,   26,   16,   60,
-       60,   60,   18,    8,   12,   14,   25,   60,   22,    0
+        2,    1,    1,   62,   59,   59,   59,   59,   59,   59,
+       59,   59,   59,   59,   15,   59,    5,   59,   59,   59,
+       59,   59,   59,   23,   59,   59,   61,    1,    7,   59,
+       13,   59,    4,   59,   11,   59,   59,   59,   59,   27,
+       59,   59,   59,   59,   20,    9,   59,   19,   24,   59,
+       21,   59,    6,   59,   59,   59,   59,   26,   16,   59,
+       59,   59,   18,    8,   12,   14,   25,   59,   22,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -1142,42 +1142,42 @@ YY_RULE_SETUP
 case 57:
 YY_RULE_SETUP
 #line 77 "lexical_analizer.l"
-{if (!isComment) {return DOT;}}
+{if (!isComment) {return D_COLON;}}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
 #line 78 "lexical_analizer.l"
-{if (!isComment) {return D_COLON;}}
+{if (!isComment) {return COLON;}}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
 #line 79 "lexical_analizer.l"
-{if (!isComment) {return COLON;}}
+{if (!isComment) {yylval.sval = strdup(yytext);return IDENTIFIER;}}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
 #line 80 "lexical_analizer.l"
-{if (!isComment) {yylval.sval = strdup(yytext);return IDENTIFIER;}}
+{if (!isComment) {return CHAR;}}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
 #line 81 "lexical_analizer.l"
-{if (!isComment) {return CHAR;}}
+{if (!isComment) {return STRING;}}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 82 "lexical_analizer.l"
-{if (!isComment) {return STRING;}}
+{if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
 #line 83 "lexical_analizer.l"
-{if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
+{if (!isComment) {yylval.dval = atof(yytext);return NUM;}}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 84 "lexical_analizer.l"
-{if (!isComment) {yylval.dval = atoi(yytext);return NUM;}}
+{if (!isComment) {return DOT;}}
 	YY_BREAK
 case 65:
 /* rule 65 can match eol */

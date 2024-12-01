@@ -27,6 +27,9 @@ typedef struct {
 SYM syms[100];
 int symCount = 0;
 int checkNumsOperation(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a <= 1 || a >= 4|| b <= 1 || b >= 4) {
         printf("Incompatible type expression at line %d: invalid operation expression, the values must be int or float\n", lineNumber);
         hasErrors = true;
@@ -35,6 +38,9 @@ int checkNumsOperation(int a, int b) {
     return a == 3 || b == 3 ? 3 : 2;
 }
 int checkComparison(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a <= 1 || a >= 4|| b <= 1 || b >= 4) {
         printf("Incompatible type expression at line %d: invalid comparison expression, the values must be int or float\n", lineNumber);
         hasErrors = true;
@@ -42,6 +48,9 @@ int checkComparison(int a, int b) {
     return 4;
 }
 int checkValuesComparison(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a == b) {
         return 4;
     }
@@ -56,6 +65,9 @@ int checkValuesComparison(int a, int b) {
     return 4;
 }
 int checkAsignation(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a != b && (a != 3 || a != 2)) {
         printf("Incompatible type error at line %d: unsoported assignment expression, both values must be the same type, and the type must be int or float\n",
             lineNumber);
@@ -65,6 +77,9 @@ int checkAsignation(int a, int b) {
     return a;
 }
 int singleAsignation(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a == 5 && b != 5 && b != 1) {
         printf("Incompatible type error at line %d: unsoported type assignment expression\n",lineNumber);
         hasErrors = true;
@@ -76,6 +91,9 @@ int singleAsignation(int a, int b) {
     return b;
 }
 int checkSumAsignation(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a == 4 || a == 1) {
         printf("Incompatible type error at line %d: unsoported assignment expression with data type %s\n", lineNumber, a == 4 ? "bool" : "char");
         hasErrors = true;
@@ -95,6 +113,9 @@ int checkSumAsignation(int a, int b) {
     return a;
 }
 int checkLogicOperation(int a, int b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
     if (a != 4 || b != 4) {
         printf("Incompatible type expression at line %d: invalid logic operation expression, the values must be bool\n", lineNumber);
         hasErrors = true;
@@ -115,7 +136,7 @@ int getSymbType(char* name, bool isFunc) {
     if (tempType != 0) {
         return tempType;
     }
-    printf("Definition error at line %d: %s %s is not defined\n", lineNumber, isFunc ? "function" : "variable", name);
+    printf("Access error at line %d: %s %s is not defined\n", lineNumber, isFunc ? "function" : "variable", name);
     hasErrors = true;
     return 0;
 }
@@ -125,11 +146,14 @@ int getGlobalSymbType(char* name) {
             return syms[i].type;
         }
     }
-    printf("Definition error at line %d: global variable %s is not defined\n", lineNumber, name);
+    printf("Access error at line %d: global variable %s is not defined\n", lineNumber, name);
     hasErrors = true;
     return 0;
 }
 int checkIncrementDecrement(int type) {
+    if (type == 0) {
+        return 0;
+    }
     if (type != 2 && type != 3) {
         printf("Incompatible type error at line %d: unsoported operation, the type must be int or float\n", lineNumber);
         hasErrors = true;
@@ -217,12 +241,14 @@ void endBlock() {
 %%
 in          :   /* empty */ | in line;
 
-line        :   EOL | exp EOL;
+line        :   EOL | exp EOL | exp_wth_bl;
 
-exp         :   instance | func | inc_dec | func_call | asingn | loop | conditional | exception;
+exp         :   instance | inc_dec | func_call | asingn;
+
+exp_wth_bl  :   loop | conditional | exception | func;
 
 func        :   func_dec std_block_d {
-    if (functType != 0 && !hasReturn) {
+    if (functType != -1 && !hasReturn) {
         printf("Missing return error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
     }
@@ -241,20 +267,20 @@ block_exp   :   instance | BREAK_KW | inc_dec | func_call | asingn | loop | cond
     if (scopeLevel == 1) {
         hasReturn = true;
     }
-    if (functType != 0 && $1 == 0) {
+    if (functType != -1 && $1 == -1 && $1 != 0) {
         printf("Incompatible type error at line %d: the function has no a return value\n", lineNumber);
         hasErrors = true;
-    } else if (functType == 0 && $1 != 0) {
+    } else if (functType == -1 && $1 != -1) {
         printf("Incompatible type error at line %d: the function is void and has a return value\n", lineNumber);
         hasErrors = true;
-    } else if (functType != 0 && functType != $1) {
+    } else if (functType != -1 && functType != $1 && $1 != 0) {
         printf("Incompatible type error at line %d: return data value of function is not compatible with function return type\n",
             lineNumber);
         hasErrors = true;
     }
 } | throw_dec;
 
-rtrn        :   RETURN_KW exp_op { $$ = $2.type; } | RETURN_KW { $$ = 0; };
+rtrn        :   RETURN_KW exp_op { $$ = $2.type; } | RETURN_KW { $$ = -1; };
 
 throw_dec   :   THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT | THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT;
 
@@ -267,16 +293,18 @@ for_decl    :   for_vrs_dec COLON for_cond COLON for_sec;
 for_vrs_dec :   for_var | for_var COMMA for_vrs_dec;
 
 for_var     :   IDENTIFIER OP_ASSIGN exp_op {
-    if ($3.type != 2) {
+    if ($3.type != 2 && $3.type != 0) {
         printf("Incompatible type error at line %d: the variable used in for iteration is not a int value\n", 
             lineNumber);
     } else {
-        addForNumber($1);
+        if ($3.type != 0) {
+            addForNumber($1);
+        }
     }
 };
 
 for_cond    :   exp_op {
-    if($1.type != 4 ) {
+    if($1.type != 4 && $1.type != 0) {
         printf("Incompatible type expression at line %d: the condition used in for iteration is not a bool value\n", 
             lineNumber);
         hasErrors = true;
@@ -288,7 +316,7 @@ for_sec     :   for_iter | for_iter COMMA for_sec;
 for_iter    :   inc_dec | asingn;
 
 while_exp   :   WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT {
-    if ($3.type != 4) {
+    if ($3.type != 4 && $3.type != 0) {
         printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
@@ -299,7 +327,7 @@ conditional :   if_els_stmt | switch_stmt;
 if_els_stmt :   if_stmt | if_stmt else_stmt | if_stmt els_if_stmt;
 
 if_stmt     :   IF_KW LEFT_PARENT exp_op {
-    if ($3.type != 4) {
+    if ($3.type != 4 && $3.type != 0) {
         printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
@@ -310,15 +338,15 @@ else_stmt   :   ELSE_KW std_block_d;
 els_if_stmt :   ELSE_KW if_stmt | els_if_stmt ELSE_KW if_stmt | els_if_stmt else_stmt;
 
 switch_stmt :   SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block {
-    if ($3.type != $7 && $7 != 0) {
-        printf("Incompatible type error at line %d: the switch cases are not compatible with the switch value type\n", lineNumber);
+    if ($3.type != $7 && $7 != 0 && $3.type != 0) {
+        printf("Incompatible type error at line %d: the cases type are not compatible with the switch value type\n", lineNumber);
         hasErrors = true;
     }
 } RIGHT_BRACKET { hasDefaultCase = false; } | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET;
 
-switch_block:   switch_line { $$ = $1; } | switch_block switch_line {
-    $1 = $1 == 0 ? $2 : $1;
-    $2 = $2 == 0 ? $1 : $2;
+switch_block:   switch_line { $$ = $1 == -1 ? 0 : $1; } | switch_block switch_line {
+    $1 = $1 == -1 ? $2 : $1;
+    $2 = $2 == -1 ? $1 : $2;
     if ($1 != $2) {
         printf("Incompatible type error at line %d: the switch cases data types are not compatible\n", lineNumber);
         hasErrors = true;
@@ -336,14 +364,14 @@ switch_line :   CASE_KW exp_op COLON { initBlock(); } block { endBlock(); $$ = $
         hasErrors = true;
     }
     hasDefaultCase = true;
-    $$ = 0;
+    $$ = -1;
 };
 
 exception   :   try_catch | try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET;
 
 try_catch   :   TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET;
 
-func_type   :   COLON type { functType = $2; hasReturn = false; $$ = $2; } | COLON VOID_KW { functType = 0; $$ = 0; };
+func_type   :   COLON type { functType = $2; hasReturn = false; $$ = $2; } | COLON VOID_KW { functType = -1; $$ = -1; };
 
 func_params :   LEFT_PARENT params_sec RIGHT_PARENT | LEFT_PARENT RIGHT_PARENT;
 
@@ -351,17 +379,17 @@ params_sec  :   param | param COMMA params_sec | param COMMA EOL params_sec;
 
 param       :   IDENTIFIER COLON type { addFunctionParam($1, $3); } | IDENTIFIER COLON type OP_ASSIGN exp_op {
     addFunctionParam($1, $3);
-    if ($5.type != $3) {
+    if ($5.type != $3 && $5.type != 0) {
         printf("Incompatible type error at line %d: data value of parameter %s is not compatible with data type\n",lineNumber, $1);
         hasErrors = true;
     }
 };
 
 instance    :   inst_id | inst_id OP_ASSIGN exp_op {
-    if ($1 == 5 && $3.type != 5 && $3.type != 1) {
+    if ($1 == 5 && $3.type != 5 && $3.type != 1 && $3.type != 0) {
         printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
-    } else if ($1 != $3.type && $1 != 5) {
+    } else if ($1 != $3.type && $1 != 5 && $3.type != 0) {
         printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
     }
@@ -392,9 +420,13 @@ exp_op      :   exp_op OP_ADD exp_op {
         hasErrors = true;
         $$.type = 0;
     } else {
-        $1.type = $1.type == 1 || $1.type == 4 ? 5 : $1.type;
-        $3.type = $3.type == 1 || $3.type == 4 ? 5 : $3.type;
-        $$.type = $1.type == 5 || $3.type == 5 ? 5 : $1.type == 3 || $3.type == 3 ? 3 : 2;
+        if ($1.type != 0 && $3.type != 0) {
+            $1.type = $1.type == 1 || $1.type == 4 ? 5 : $1.type;
+            $3.type = $3.type == 1 || $3.type == 4 ? 5 : $3.type;
+            $$.type = $1.type == 5 || $3.type == 5 ? 5 : $1.type == 3 || $3.type == 3 ? 3 : 2;
+        }else{
+            $$.type = 0;
+        }
     }
     if($1.hasVal && $3.hasVal) {
         $$.hasVal = 1;
@@ -513,7 +545,7 @@ exp_op      :   exp_op OP_ADD exp_op {
             |   LEFT_PARENT exp_op RIGHT_PARENT { $$.type = $2.type; $$.hasVal=$2.hasVal; if($2.hasVal) { $$.val = $2.val; } }
             |   value_data { $$.type = $1.type; $$.hasVal = $1.hasVal; if($1.hasVal) { $$.val = $1.val; }; }
             |   func_call { $$.type = $1; $$.hasVal = 0;
-    if ($1 == 0) {
+    if ($1 == -1) {
         printf("Incompatible type error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }

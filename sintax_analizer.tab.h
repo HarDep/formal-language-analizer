@@ -125,12 +125,18 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 189 "sintax_analizer.y"
+#line 190 "sintax_analizer.y"
 
     int ival;
     char *sval;
+    double dval;
+    struct {
+        int type;
+        int hasVal;
+        double val;
+    } sdata;
 
-#line 134 "sintax_analizer.tab.h"
+#line 140 "sintax_analizer.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

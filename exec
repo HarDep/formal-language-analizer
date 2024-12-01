@@ -7,7 +7,7 @@ bison -d -v sintax_analizer.y
 
 flex lexical_analizer.l
 
-gcc sintax_analizer.tab.c lex.yy.c -lfl -o analize_code.out
+gcc sintax_analizer.tab.c lex.yy.c -lfl -lm -o analize_code.out
 
 echo "Analizador generado"
 

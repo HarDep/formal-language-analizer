@@ -80,8 +80,8 @@ null                                    {if (!isComment) {return NULL_KW;}}
 {IDENTIFIER}                            {if (!isComment) {yylval.sval = strdup(yytext);return IDENTIFIER;}}
 {CHAR}                                  {if (!isComment) {return CHAR;}}
 {STRING}                                {if (!isComment) {return STRING;}}
-{digit}+\.{digit}*                      {if (!isComment) {return NUM_DEC;}}
-{digit}+                                {if (!isComment) {return NUM;}}
+{digit}+\.{digit}*                      {if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
+{digit}+                                {if (!isComment) {yylval.dval = atoi(yytext);return NUM;}}
 \n                                      {lineNumber++;if (!isComment) {return EOL;}}
 [ \t\r\f]                               {/* Ignore spaces */}
 .                                       {printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNumber, yytext);hasErrors = true;}

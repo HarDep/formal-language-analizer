@@ -1172,12 +1172,12 @@ YY_RULE_SETUP
 case 63:
 YY_RULE_SETUP
 #line 83 "lexical_analizer.l"
-{if (!isComment) {return NUM_DEC;}}
+{if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 84 "lexical_analizer.l"
-{if (!isComment) {return NUM;}}
+{if (!isComment) {yylval.dval = atoi(yytext);return NUM;}}
 	YY_BREAK
 case 65:
 /* rule 65 can match eol */

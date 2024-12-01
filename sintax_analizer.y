@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 extern YYTXT yytext;
 extern LINE_NUM_TYPE lineNumber;
 extern bool hasErrors;
@@ -189,6 +190,12 @@ void endBlock() {
 %union{
     int ival;
     char *sval;
+    double dval;
+    struct {
+        int type;
+        int hasVal;
+        double val;
+    } sdata;
 }
 %right OP_ASSIGN OP_ADD_ASSIGN OP_SUB_ASSIGN OP_MUL_ASSIGN OP_DIV_ASSIGN OP_MOD_ASSIGN
 %left OP_AND OP_OR
@@ -201,16 +208,18 @@ void endBlock() {
 %token LEFT_PARENT RIGHT_PARENT LEFT_BRACKET RIGHT_BRACKET LEFT_SQUARE RIGHT_SQUARE COMMA DOT D_COLON COLON
 %token FOR_KW WHILE_KW DO_KW BREAK_KW RETURN_KW TRUE_KW FALSE_KW FUNCTION_KW TRY_KW CATCH_KW FINALLY_KW
 %token CHAR_KW INT_KW FLOAT_KW BOOL_KW STRING_KW VOID_KW IF_KW ELSE_KW SWITCH_KW CASE_KW DEFAULT_KW
-%token <ival> CHAR STRING NUM NUM_DEC
+%token <ival> CHAR STRING 
+%token <dval> NUM NUM_DEC
 %token <sval> IDENTIFIER
 %token EOL
-%type <ival> value_data rtrn exp_op type func_call inc_dec var_value func_type switch_line switch_block inst_id
+%type <ival> rtrn type func_call inc_dec var_value func_type switch_line switch_block inst_id
+%type <sdata> value_data exp_op
 %%
 in          :   /* empty */ | in line;
 
 line        :   EOL | exp EOL;
 
-exp         :   instance | func | inc_dec | func_call | asingn;
+exp         :   instance | func | inc_dec | func_call | asingn | loop | conditional | exception;
 
 func        :   func_dec std_block_d {
     if (functType != 0 && !hasReturn) {
@@ -245,7 +254,7 @@ block_exp   :   instance | BREAK_KW | inc_dec | func_call | asingn | loop | cond
     }
 } | throw_dec;
 
-rtrn        :   RETURN_KW exp_op { $$ = $2; } | RETURN_KW { $$ = 0; };
+rtrn        :   RETURN_KW exp_op { $$ = $2.type; } | RETURN_KW { $$ = 0; };
 
 throw_dec   :   THROW_KW IDENTIFIER LEFT_PARENT STRING RIGHT_PARENT | THROW_KW IDENTIFIER LEFT_PARENT RIGHT_PARENT;
 
@@ -258,7 +267,7 @@ for_decl    :   for_vrs_dec COLON for_cond COLON for_sec;
 for_vrs_dec :   for_var | for_var COMMA for_vrs_dec;
 
 for_var     :   IDENTIFIER OP_ASSIGN exp_op {
-    if ($3 != 2) {
+    if ($3.type != 2) {
         printf("Incompatible type error at line %d: the variable used in for iteration is not a int value\n", 
             lineNumber);
     } else {
@@ -267,7 +276,7 @@ for_var     :   IDENTIFIER OP_ASSIGN exp_op {
 };
 
 for_cond    :   exp_op {
-    if($1 != 4 ) {
+    if($1.type != 4 ) {
         printf("Incompatible type expression at line %d: the condition used in for iteration is not a bool value\n", 
             lineNumber);
         hasErrors = true;
@@ -279,7 +288,7 @@ for_sec     :   for_iter | for_iter COMMA for_sec;
 for_iter    :   inc_dec | asingn;
 
 while_exp   :   WHILE_KW LEFT_PARENT exp_op RIGHT_PARENT {
-    if ($3 != 4) {
+    if ($3.type != 4) {
         printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
@@ -290,7 +299,7 @@ conditional :   if_els_stmt | switch_stmt;
 if_els_stmt :   if_stmt | if_stmt else_stmt | if_stmt els_if_stmt;
 
 if_stmt     :   IF_KW LEFT_PARENT exp_op {
-    if ($3 != 4) {
+    if ($3.type != 4) {
         printf("Incompatible type expression at line %d: the condition is not a bool value\n", lineNumber);
         hasErrors = true;
     }
@@ -301,7 +310,7 @@ else_stmt   :   ELSE_KW std_block_d;
 els_if_stmt :   ELSE_KW if_stmt | els_if_stmt ELSE_KW if_stmt | els_if_stmt else_stmt;
 
 switch_stmt :   SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block {
-    if ($3 != $7 && $7 != 0) {
+    if ($3.type != $7 && $7 != 0) {
         printf("Incompatible type error at line %d: the switch cases are not compatible with the switch value type\n", lineNumber);
         hasErrors = true;
     }
@@ -319,7 +328,7 @@ switch_block:   switch_line { $$ = $1; } | switch_block switch_line {
     }
 };
 
-switch_line :   CASE_KW exp_op COLON { initBlock(); } block { endBlock(); $$ = $2; }
+switch_line :   CASE_KW exp_op COLON { initBlock(); } block { endBlock(); $$ = $2.type; }
             |   DEFAULT_KW COLON { initBlock(); } block {
     endBlock();
     if (hasDefaultCase) {
@@ -342,17 +351,17 @@ params_sec  :   param | param COMMA params_sec | param COMMA EOL params_sec;
 
 param       :   IDENTIFIER COLON type { addFunctionParam($1, $3); } | IDENTIFIER COLON type OP_ASSIGN exp_op {
     addFunctionParam($1, $3);
-    if ($5 != $3) {
+    if ($5.type != $3) {
         printf("Incompatible type error at line %d: data value of parameter %s is not compatible with data type\n",lineNumber, $1);
         hasErrors = true;
     }
 };
 
 instance    :   inst_id | inst_id OP_ASSIGN exp_op {
-    if ($1 == 5 && $3 != 5 && $3 != 1) {
+    if ($1 == 5 && $3.type != 5 && $3.type != 1) {
         printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
-    } else if ($1 != $3 && $1 != 5) {
+    } else if ($1 != $3.type && $1 != 5) {
         printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
         hasErrors = true;
     }
@@ -366,57 +375,108 @@ type        :   CHAR_KW     { $$ = 1; }
             |   BOOL_KW     { $$ = 4; }
             |   STRING_KW   { $$ = 5; };
 
-value_data  :   CHAR        { $$ = 1; }
-            |   NUM         { $$ = 2; }
-            |   NUM_DEC     { $$ = 3; }
-            |   TRUE_KW     { $$ = 4; }
-            |   FALSE_KW    { $$ = 4; }
-            |   STRING      { $$ = 5; }
-            |   var_value   { $$ = $1; };
+value_data  :   CHAR        { $$.type = 1; $$.hasVal = 0; }
+            |   NUM         { $$.type = 2; $$.hasVal = 1; $$.val = $1; }
+            |   NUM_DEC     { $$.type = 3; $$.hasVal = 1; $$.val = $1; }
+            |   TRUE_KW     { $$.type = 4; $$.hasVal = 0; }
+            |   FALSE_KW    { $$.type = 4; $$.hasVal = 0; }
+            |   STRING      { $$.type = 5; $$.hasVal = 0; }
+            |   var_value   { $$.type = $1; $$.hasVal = 0; };
 
 var_value   :   IDENTIFIER  { $$ = getSymbType($1, false); }
             |   D_COLON IDENTIFIER { $$ = getGlobalSymbType($2); };
 
 exp_op      :   exp_op OP_ADD exp_op {
-    if ($1 == 4 && $3 == 4) {
+    if ($1.type == 4 && $3.type == 4) {
         printf("Incompatible type expression at line %d: invalid operation expression, cannot add bool values\n", lineNumber);
         hasErrors = true;
-        $$ = 0;
+        $$.type = 0;
     } else {
-        $1 = $1 == 1 || $1 == 4 ? 5 : $1;
-        $3 = $3 == 1 || $3 == 4 ? 5 : $3;
-        $$ = $1 == 5 || $3 == 5 ? 5 : $1 == 3 || $3 == 3 ? 3 : 2;
+        $1.type = $1.type == 1 || $1.type == 4 ? 5 : $1.type;
+        $3.type = $3.type == 1 || $3.type == 4 ? 5 : $3.type;
+        $$.type = $1.type == 5 || $3.type == 5 ? 5 : $1.type == 3 || $3.type == 3 ? 3 : 2;
+    }
+    if($1.hasVal && $3.hasVal) {
+        $$.hasVal = 1;
+        $$.val = $1.val + $3.val;
+    } else {
+        $$.hasVal = 0;
     }
 }
-            |   exp_op OP_SUB exp_op { $$ = checkNumsOperation($1, $3); }
-            |   exp_op OP_MUL exp_op { $$ = checkNumsOperation($1, $3); }
-            |   exp_op OP_DIV exp_op { $$ = checkNumsOperation($1, $3); }
-            |   exp_op OP_MOD exp_op { $$ = checkNumsOperation($1, $3); }
-            |   OP_SUB exp_op %prec UMINUS { $$ = checkNumsOperation($2, $2); }
-            |   exp_op OP_GT exp_op { $$ = checkComparison($1, $3); }
-            |   exp_op OP_LT exp_op { $$ = checkComparison($1, $3); }
-            |   exp_op OP_GTE exp_op { $$ = checkComparison($1, $3); }
-            |   exp_op OP_LTE exp_op { $$ = checkComparison($1, $3); }
-            |   exp_op OP_EQ exp_op { $$ = checkValuesComparison($1, $3); }
-            |   exp_op OP_NEQ exp_op { $$ = checkValuesComparison($1, $3); }
-            |   exp_op OP_AND exp_op { $$ = checkLogicOperation($1, $3); }
-            |   exp_op OP_OR exp_op { $$ = checkLogicOperation($1, $3); }
-            |   OP_NOT exp_op { $$ = checkLogicOperation($2, $2); }
-            |   var_value OP_ASSIGN exp_op { $$ = singleAsignation($1, $3); }
-            |   var_value OP_ADD_ASSIGN exp_op { $$ = checkSumAsignation($1, $3); }
-            |   var_value OP_SUB_ASSIGN exp_op { $$ = checkAsignation($1, $3); }
-            |   var_value OP_MUL_ASSIGN exp_op { $$ = checkAsignation($1, $3); }
-            |   var_value OP_DIV_ASSIGN exp_op { $$ = checkAsignation($1, $3); }
-            |   var_value OP_MOD_ASSIGN exp_op { $$ = checkAsignation($1, $3); }
-            |   LEFT_PARENT exp_op RIGHT_PARENT { $$ = $2; }
-            |   value_data { $$ = $1; }
-            |   func_call { $$ = $1;
+            |   exp_op OP_SUB exp_op { $$.type = checkNumsOperation($1.type, $3.type);
+    if($1.hasVal && $3.hasVal) {
+        $$.hasVal = 1;
+        $$.val = $1.val - $3.val;
+    } else {
+        $$.hasVal = 0;
+    }
+}
+            |   exp_op OP_MUL exp_op { $$.type = checkNumsOperation($1.type, $3.type);
+    if($1.hasVal && $3.hasVal) {
+        $$.hasVal = 1;
+        $$.val = $1.val * $3.val;
+    } else {
+        $$.hasVal = 0;
+    }
+}
+            |   exp_op OP_DIV exp_op { $$.type = checkNumsOperation($1.type, $3.type);
+    if($1.hasVal && $3.hasVal && $3.val != 0) {
+            $$.hasVal = 1;
+            $$.val = $1.val / $3.val;
+    } else {
+        $$.hasVal = 0;
+    }
+    if($3.hasVal && $3.val == 0) {
+        printf("Logical error at line %d: division by zero\n", lineNumber);
+        hasErrors = true;
+        $$.hasVal = 0;
+    }
+}
+            |   exp_op OP_MOD exp_op { $$.type = checkNumsOperation($1.type, $3.type);
+    if($1.hasVal && $3.hasVal && $3.val != 0) {
+            $$.hasVal = 1;
+            $$.val = fmod($1.val,$3.val);
+    } else {
+        $$.hasVal = 0;
+    }
+    if($3.hasVal && $3.val == 0) {
+        printf("Logical error at line %d: division by zero on module operation\n", lineNumber);
+        hasErrors = true;
+        $$.hasVal = 0;
+    }
+}
+            |   OP_SUB exp_op %prec UMINUS { $$.type = checkNumsOperation($2.type, $2.type);
+    if($2.hasVal) {
+        $$.hasVal = 1;
+        $$.val = -$2.val;
+    } else {
+        $$.hasVal = 0;
+    }
+}
+            |   exp_op OP_GT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_LT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_GTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_LTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_EQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_NEQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_AND exp_op { $$.type = checkLogicOperation($1.type, $3.type); $$.hasVal=0; }
+            |   exp_op OP_OR exp_op { $$.type = checkLogicOperation($1.type, $3.type); $$.hasVal=0; }
+            |   OP_NOT exp_op { $$.type = checkLogicOperation($2.type, $2.type); $$.hasVal=0; }
+            |   var_value OP_ASSIGN exp_op { $$.type = singleAsignation($1, $3.type); $$.hasVal=0; }
+            |   var_value OP_ADD_ASSIGN exp_op { $$.type = checkSumAsignation($1, $3.type); $$.hasVal=0; }
+            |   var_value OP_SUB_ASSIGN exp_op { $$.type = checkAsignation($1, $3.type); $$.hasVal=0; }
+            |   var_value OP_MUL_ASSIGN exp_op { $$.type = checkAsignation($1, $3.type); $$.hasVal=0; }
+            |   var_value OP_DIV_ASSIGN exp_op { $$.type = checkAsignation($1, $3.type); $$.hasVal=0; }
+            |   var_value OP_MOD_ASSIGN exp_op { $$.type = checkAsignation($1, $3.type); $$.hasVal=0; }
+            |   LEFT_PARENT exp_op RIGHT_PARENT { $$.type = $2.type; $$.hasVal=$2.hasVal; if($2.hasVal) { $$.val = $2.val; } }
+            |   value_data { $$.type = $1.type; $$.hasVal = $1.hasVal; if($1.hasVal) { $$.val = $1.val; }; }
+            |   func_call { $$.type = $1; $$.hasVal = 0;
     if ($1 == 0) {
         printf("Incompatible type error at line %d: the function called has no a return value\n", lineNumber);
         hasErrors = true;
     }
 }
-            |   inc_dec { $$ = $1; };
+            |   inc_dec { $$.type = $1; $$.hasVal = 0; };
 
 inc_dec     :   var_value ops_inc_dec { $$ = checkIncrementDecrement($1); } | ops_inc_dec var_value { $$ = checkIncrementDecrement($2); };
 
@@ -429,9 +489,9 @@ func_args   :   func_arg | func_arg COMMA func_args | func_arg COMMA EOL func_ar
 
 func_arg    :   IDENTIFIER COLON exp_op | exp_op;
 
-asingn      :   var_value OP_ASSIGN exp_op { singleAsignation($1, $3); }
-            |   var_value OP_ADD_ASSIGN exp_op { checkSumAsignation($1, $3); }
-            |   var_value ops_asingn exp_op { checkAsignation($1, $3); };
+asingn      :   var_value OP_ASSIGN exp_op { singleAsignation($1, $3.type); }
+            |   var_value OP_ADD_ASSIGN exp_op { checkSumAsignation($1, $3.type); }
+            |   var_value ops_asingn exp_op { checkAsignation($1, $3.type); };
 
 ops_asingn  :   OP_SUB_ASSIGN | OP_MUL_ASSIGN | OP_DIV_ASSIGN | OP_MOD_ASSIGN;
 %%

@@ -5,6 +5,14 @@ function main() : void {
     int a = 3
 }
 
+//comentario de una linea
+
+/*
+
+comentario de varias lineas
+
+*/
+
 int g = ::a + 5
 
 int jjj
@@ -26,8 +34,6 @@ function sum2( x : int = 5, y : int = 0) : int {
     return x + y
 }
 
-//bool a = true
-
 string s = 'a'
 
 function sum(a:int, 
@@ -45,7 +51,7 @@ function sum(a:int,
         int t = 8
     }
     do {
-        //t++
+        int num = 5
     } while (a==4)
     try {
 
@@ -75,7 +81,6 @@ function sum(a:int,
         break
         case 3:
         break
-        //default:
     }
     switch (a){
         default:

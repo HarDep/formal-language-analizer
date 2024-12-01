@@ -1,0 +1,18 @@
+
+int a = 4 / 0 // Error esperado aqui
+
+int b = 47 * 6 / 0 // Error esperado aqui
+
+float c = 5.0 / 0 // Error esperado aqui
+
+float d = 507.0 * 7.0 / 0 // Error esperado aqui
+
+int e = 5 % 0 // Error esperado aqui
+
+int f = 507 * 7 % 0 // Error esperado aqui
+
+float g = 5.0 % 0 // Error esperado aqui
+
+float h = 35.0 * 8.0 % 0 // Error esperado aqui
+
+bool resultado = 10 - 3 * 2 % 0 + 1 < a && 8 / 0 == b // Errores esperados aqui

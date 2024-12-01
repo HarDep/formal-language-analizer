@@ -1,0 +1,21 @@
+int count = 0
+
+while (count) {  // Error: condición debe ser bool
+    count++
+}
+
+for (i = 0: i < 5: i += 1.5) {  // Error: incremento debe ser int
+
+}
+
+do {
+
+} while (count + 78) // Error: condición debe ser bool
+
+for(i = "hola": i < 5: i += 1) { // Error: variable debe ser int
+
+}
+
+for (i = 0: 5 + 7: i += 1) { // Error: condición debe ser bool
+
+}

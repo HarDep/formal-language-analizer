@@ -3,16 +3,15 @@
 #define YYHASERRORS bool
 #define YYTXT char*
 #define YYCURR_VAR char*
-#define LINE_NUM_TYPE int
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 extern YYTXT yytext;
-extern LINE_NUM_TYPE lineNumber;
 extern bool hasErrors;
 extern int yylex(void);
 extern FILE *yyin;
+int lineNumber = 1;
 bool hasDefaultCase = false;
 int scopeLevel = 0;
 int functType = -1;
@@ -81,10 +80,12 @@ int singleAsignation(int a, int b) {
         return 0;
     }
     if (a == 5 && b != 5 && b != 1) {
-        printf("Incompatible type error at line %d: unsoported type assignment expression\n",lineNumber);
+        printf("Incompatible type error at line %d: unsoported type assignment expression\n",
+            lineNumber);
         hasErrors = true;
     } else if (a != b) {
-        printf("Incompatible type error at line %d: unsoported type assignment expression\n",lineNumber);
+        printf("Incompatible type error at line %d: unsoported type assignment expression\n",
+            lineNumber);
         hasErrors = true;
         return 0;
     }
@@ -95,18 +96,27 @@ int checkSumAsignation(int a, int b) {
         return 0;
     }
     if (a == 4 || a == 1) {
-        printf("Incompatible type error at line %d: unsoported assignment expression with data type %s\n", lineNumber, a == 4 ? "bool" : "char");
+        printf("Incompatible type error at line %d: unsoported assignment expression with data type %s\n", 
+            lineNumber, a == 4 ? "bool" : "char");
         hasErrors = true;
         return 0;
     }
     b = a == 5 ? 5 : b;
     if(b == 5 && a != 5) {
-        printf("Incompatible type error at line %d: unsoported assignment expression with data type string\n", lineNumber);
+        printf("Incompatible type error at line %d: unsoported assignment expression with data type string\n", 
+            lineNumber);
         hasErrors = true;
         return 0;
     }
-    if(b == 3 && a == 2) {
-        printf("Incompatible type error at line %d: unsoported assignment expression with data type float\n", lineNumber);
+    if(a == 3 && (b != 2 || b != 3)) {
+        printf("Incompatible type error at line %d: unsoported assignment expression with data type float\n", 
+            lineNumber);
+        hasErrors = true;
+        return 0;
+    }
+    if (a != b) {
+        printf("Incompatible type error at line %d: unsoported assignment expression, both values must be the same type\n", 
+            lineNumber);
         hasErrors = true;
         return 0;
     }
@@ -241,7 +251,9 @@ void endBlock() {
 %%
 in          :   /* empty */ | in line;
 
-line        :   EOL | exp EOL | exp_wth_bl;
+line        :   n_line | exp n_line | exp_wth_bl;
+
+n_line      :   EOL { lineNumber++; };
 
 exp         :   instance | inc_dec | func_call | asingn;
 
@@ -260,7 +272,7 @@ func_dec    :   FUNCTION_KW IDENTIFIER func_params func_type { addSymb($2, $4, t
 
 block       :   /* empty */ | block block_line;
 
-block_line  :   EOL | block_exp EOL;
+block_line  :   n_line | block_exp n_line;
 
 block_exp   :   instance | BREAK_KW | inc_dec | func_call | asingn | loop | conditional | exception
             | rtrn {
@@ -296,11 +308,8 @@ for_var     :   IDENTIFIER OP_ASSIGN exp_op {
     if ($3.type != 2 && $3.type != 0) {
         printf("Incompatible type error at line %d: the variable used in for iteration is not a int value\n", 
             lineNumber);
-    } else {
-        if ($3.type != 0) {
-            addForNumber($1);
-        }
     }
+    addForNumber($1);
 };
 
 for_cond    :   exp_op {
@@ -337,12 +346,12 @@ else_stmt   :   ELSE_KW std_block_d;
 
 els_if_stmt :   ELSE_KW if_stmt | els_if_stmt ELSE_KW if_stmt | els_if_stmt else_stmt;
 
-switch_stmt :   SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL switch_block {
+switch_stmt :   SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET n_line switch_block {
     if ($3.type != $7 && $7 != 0 && $3.type != 0) {
         printf("Incompatible type error at line %d: the cases type are not compatible with the switch value type\n", lineNumber);
         hasErrors = true;
     }
-} RIGHT_BRACKET { hasDefaultCase = false; } | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET EOL RIGHT_BRACKET;
+} RIGHT_BRACKET { hasDefaultCase = false; } | SWITCH_KW LEFT_PARENT exp_op RIGHT_PARENT LEFT_BRACKET n_line RIGHT_BRACKET;
 
 switch_block:   switch_line { $$ = $1 == -1 ? 0 : $1; } | switch_block switch_line {
     $1 = $1 == -1 ? $2 : $1;
@@ -375,7 +384,7 @@ func_type   :   COLON type { functType = $2; hasReturn = false; $$ = $2; } | COL
 
 func_params :   LEFT_PARENT params_sec RIGHT_PARENT | LEFT_PARENT RIGHT_PARENT;
 
-params_sec  :   param | param COMMA params_sec | param COMMA EOL params_sec;
+params_sec  :   param | param COMMA params_sec | param COMMA n_line params_sec;
 
 param       :   IDENTIFIER COLON type { addFunctionParam($1, $3); } | IDENTIFIER COLON type OP_ASSIGN exp_op {
     addFunctionParam($1, $3);
@@ -387,10 +396,10 @@ param       :   IDENTIFIER COLON type { addFunctionParam($1, $3); } | IDENTIFIER
 
 instance    :   inst_id | inst_id OP_ASSIGN exp_op {
     if ($1 == 5 && $3.type != 5 && $3.type != 1 && $3.type != 0) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber);
         hasErrors = true;
     } else if ($1 != $3.type && $1 != 5 && $3.type != 0) {
-        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber - 1);
+        printf("Incompatible type error at line %d: variable inicialization value is not compatible with data type\n",lineNumber);
         hasErrors = true;
     }
 };
@@ -559,7 +568,7 @@ ops_inc_dec :   OP_INC | OP_DEC;
 func_call   :   IDENTIFIER LEFT_PARENT RIGHT_PARENT { $$ = getSymbType($1, true); }
             |   IDENTIFIER LEFT_PARENT func_args RIGHT_PARENT { $$ = getSymbType($1, true); };
 
-func_args   :   func_arg | func_arg COMMA func_args | func_arg COMMA EOL func_args;
+func_args   :   func_arg | func_arg COMMA func_args | func_arg COMMA n_line func_args;
 
 func_arg    :   IDENTIFIER COLON exp_op | exp_op;
 

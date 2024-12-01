@@ -1,0 +1,3 @@
+Prueba para validar tipos en condiciones de bloques condicionales.
+Resultado esperado:
+Errores de incompatibilidad de tipo, y de definicion en el caso del doble default del switch

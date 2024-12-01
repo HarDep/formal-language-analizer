@@ -4,7 +4,7 @@
 #include <stdbool.h>
 bool hasErrors = false;
 bool isComment = false;
-int lineNumber = 1;
+int lineNum = 1;
 char* currVar = NULL;
 %}
 alpha               [a-zA-Z]
@@ -82,9 +82,9 @@ null                                    {if (!isComment) {return NULL_KW;}}
 {digit}+\.{digit}+                      {if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
 {digit}+                                {if (!isComment) {yylval.dval = atof(yytext);return NUM;}}
 \.                                      {if (!isComment) {return DOT;}}
-\n                                      {lineNumber++;if (!isComment) {return EOL;}}
+\n                                      {lineNum++;if (!isComment) {return EOL;}}
 [ \t\r\f]                               {/* Ignore spaces */}
-.                                       {printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNumber, yytext);hasErrors = true;}
+.                                       {printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNum, yytext);hasErrors = true;}
 %%
 
 int yywrap() { return 1; }

@@ -1,0 +1,21 @@
+
+int a = 5
+
+a += "hola" // Error: valor a asignar debe ser int
+
+float c = 5.0
+
+c %= a // Error: valor a asignar debe ser float
+
+
+a += true // Error: valor a asignar debe ser int
+
+a += (c+=4.0 +8) *8
+
+a -= c // Error: valor a asignar debe ser int
+
+bool b = true
+
+b++
+
+++b

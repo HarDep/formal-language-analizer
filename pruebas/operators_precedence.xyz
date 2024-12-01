@@ -1,0 +1,14 @@
+
+int result = 10 + 5 * 2 - 3
+
+int calc = (2 + 3) * 4 / 2
+
+bool resultado = 5 > calc && result < 4 || calc == 8
+
+int resultado2 = (10 - 5) * (2 + 3)
+
+int x = 5
+
+int y = x += 2 * 3
+
+bool resultado3 = 3 + 2 * 2 > y || 4 / calc == 2 && !false

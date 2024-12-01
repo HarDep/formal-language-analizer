@@ -1,0 +1,16 @@
+
+if (5 == 5) { // Error esperado aqui, siempre da true
+    int x = 5
+} else {
+    //nunca llega a ejecutarse este bloque
+}
+
+bool resultado3 = 3 + 2 * 2 > 5 || 4 / 2 == 2 && !false // Errores esperados aqui, siempre da true
+
+while (5 == 5 && 7 >= 7) { // Errores esperados aqui, siempre da true
+    int x = 5
+}
+
+while (5 != 5 || 7 < 7) { // Errores esperados aqui, siempre da false
+    int x = 5 // Nunca llega a ejecutarse este bloque
+}

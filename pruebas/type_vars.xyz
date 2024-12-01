@@ -5,7 +5,7 @@ char c = 4 // Error esperado aqui, el tipo de c es char
 
 int n = 4.6 // Error esperado aqui, el tipo de n es int
 
-float d = "ddd" // Error esperado aqui, el tipo de d es float
+float d = 4 + 5 // Error esperado aqui, el tipo de d es float, alguno de los numeros debe ser decimal
 
 bool b = 3 // Error esperado aqui, el tipo de b es bool
 

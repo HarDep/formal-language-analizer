@@ -1,0 +1,39 @@
+int x = 5
+
+if (x + 3.5) {  // Error: condición debe ser bool
+    string mensaje = "Error"
+}
+
+if ("hola") {  // Error: condición debe ser bool
+
+} else if (5.0 + 5) { // Error: condición debe ser bool
+
+} else if ('a') { // Error: condición debe ser bool
+
+}
+
+switch (x) {
+    case true:
+        int y = 5
+        break
+    case false:
+        break
+} // Error: valor de switch es int y los cases son bool
+
+switch (x) {
+    case 5:
+        int y = 5
+        break
+    case "hola": // Error: cases con diferentes tipos
+        break
+}
+
+switch (x) {
+    case 5:
+        int y = 5
+        break
+    default:
+        break
+    default: // Error: se puede tener solo un default
+        break
+}

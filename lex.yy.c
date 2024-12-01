@@ -580,7 +580,7 @@ char *yytext;
 #include <stdbool.h>
 bool hasErrors = false;
 bool isComment = false;
-int lineNumber = 1;
+int lineNum = 1;
 char* currVar = NULL;
 #line 586 "lex.yy.c"
 #line 587 "lex.yy.c"
@@ -1183,7 +1183,7 @@ case 65:
 /* rule 65 can match eol */
 YY_RULE_SETUP
 #line 85 "lexical_analizer.l"
-{lineNumber++;if (!isComment) {return EOL;}}
+{lineNum++;if (!isComment) {return EOL;}}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
@@ -1193,7 +1193,7 @@ YY_RULE_SETUP
 case 67:
 YY_RULE_SETUP
 #line 87 "lexical_analizer.l"
-{printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNumber, yytext);hasErrors = true;}
+{printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNum, yytext);hasErrors = true;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP

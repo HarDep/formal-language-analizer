@@ -1,0 +1,10 @@
+switch (int opcion) {
+    case 1:
+        print("Opción 1 seleccionada");
+        break;
+    case 2:
+        print("Opción 2 seleccionada");
+        break;
+    default:
+        print("Opción no válida");
+}

@@ -1,0 +1,5 @@
+function calcularArea(float base = 5.0, float altura): float {
+    return base * altura;
+}
+float area = calcularArea(10.0, 20.0);
+print("El área es:", area);

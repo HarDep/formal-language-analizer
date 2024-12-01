@@ -1,0 +1,12 @@
+function factorial(int n): int {
+    if (n == 0) {
+        return 1;
+    }
+    try {
+        return n * factorial(n - 1);
+    } catch (error) {
+        print("Error calculando factorial");
+    }
+}
+int resultado = factorial(5);
+print(resultado);

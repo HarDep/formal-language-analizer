@@ -14,4 +14,9 @@ if(true){
 int a = 10
 
 function main(): void {
+    test() // Error esperado aqui, la funcion test no ha sido declarada
+}
+
+function test(): void {
+    int x = 5
 }

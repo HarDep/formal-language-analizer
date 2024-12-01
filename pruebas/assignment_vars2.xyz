@@ -12,6 +12,8 @@ a += true // Error: valor a asignar debe ser int
 
 a += (c+=4.0 +8) *8
 
+a = 'a'
+
 a -= c // Error: valor a asignar debe ser int
 
 bool b = true

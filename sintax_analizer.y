@@ -12,6 +12,7 @@ extern bool hasErrors;
 extern int yylex(void);
 extern FILE *yyin;
 int lineNumber = 1;
+bool isInException = false;
 bool hasDefaultCase = false;
 int scopeLevel = 0;
 int functType = -1;
@@ -238,8 +239,8 @@ void endBlock() {
 %left OP_ADD OP_SUB
 %left OP_MUL OP_DIV OP_MOD
 %right OP_NOT UMINUS
-%token THROW_KW NULL_KW OP_INC OP_DEC
-%token LEFT_PARENT RIGHT_PARENT LEFT_BRACKET RIGHT_BRACKET LEFT_SQUARE RIGHT_SQUARE COMMA DOT D_COLON COLON
+%token THROW_KW OP_INC OP_DEC
+%token LEFT_PARENT RIGHT_PARENT LEFT_BRACKET RIGHT_BRACKET COMMA D_COLON COLON
 %token FOR_KW WHILE_KW DO_KW BREAK_KW RETURN_KW TRUE_KW FALSE_KW FUNCTION_KW TRY_KW CATCH_KW FINALLY_KW
 %token CHAR_KW INT_KW FLOAT_KW BOOL_KW STRING_KW VOID_KW IF_KW ELSE_KW SWITCH_KW CASE_KW DEFAULT_KW
 %token <ival> CHAR STRING 
@@ -376,9 +377,9 @@ switch_line :   CASE_KW exp_op COLON { initBlock(); } block { endBlock(); $$ = $
     $$ = -1;
 };
 
-exception   :   try_catch | try_catch FINALLY_KW LEFT_BRACKET block RIGHT_BRACKET;
+exception   :   try_catch | try_catch FINALLY_KW std_block_d;
 
-try_catch   :   TRY_KW LEFT_BRACKET block RIGHT_BRACKET CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT LEFT_BRACKET block RIGHT_BRACKET;
+try_catch   :   TRY_KW LEFT_BRACKET { isInException = true; initBlock(); } block RIGHT_BRACKET { isInException = false; endBlock(); } CATCH_KW LEFT_PARENT IDENTIFIER RIGHT_PARENT std_block_d;
 
 func_type   :   COLON type { functType = $2; hasReturn = false; $$ = $2; } | COLON VOID_KW { functType = -1; $$ = -1; };
 
@@ -467,7 +468,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     } else {
         $$.hasVal = 0;
     }
-    if($3.hasVal && $3.val == 0) {
+    if($3.hasVal && $3.val == 0 && !isInException) {
         printf("Logical error at line %d: division by zero\n", lineNumber);
         hasErrors = true;
         $$.hasVal = 0;
@@ -480,7 +481,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     } else {
         $$.hasVal = 0;
     }
-    if($3.hasVal && $3.val == 0) {
+    if($3.hasVal && $3.val == 0 && !isInException) {
         printf("Logical error at line %d: division by zero on module operation\n", lineNumber);
         hasErrors = true;
         $$.hasVal = 0;
@@ -495,7 +496,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_GT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f > %.*f is always %s\n", lineNumber, dec1, $1.val, dec2, $3.val, $1.val > $3.val ? "true" : "false");
@@ -503,7 +504,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_LT exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f < %.*f is always %s\n", lineNumber, dec1, $1.val, dec2, $3.val, $1.val < $3.val ? "true" : "false");
@@ -511,7 +512,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_GTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f >= %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val >= $3.val ? "true" : "false");
@@ -519,7 +520,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_LTE exp_op { $$.type = checkComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f <= %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val <= $3.val ? "true" : "false");
@@ -527,7 +528,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_EQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f == %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val == $3.val ? "true" : "false");
@@ -535,7 +536,7 @@ exp_op      :   exp_op OP_ADD exp_op {
     }
 }
             |   exp_op OP_NEQ exp_op { $$.type = checkValuesComparison($1.type, $3.type); $$.hasVal=0;
-    if($1.hasVal && $3.hasVal) {
+    if($1.hasVal && $3.hasVal && !isInException) {
         int dec1 = $1.type == 2 ? 0 : 7;
         int dec2 = $3.type == 2 ? 0 : 7;
         printf("Logical error at line %d: value of comparison %.*f != %.*f is always %s\n", lineNumber, dec1,$1.val, dec2, $3.val, $1.val != $3.val ? "true" : "false");

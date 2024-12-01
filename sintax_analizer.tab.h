@@ -76,47 +76,43 @@ extern int yydebug;
     OP_NOT = 277,                  /* OP_NOT  */
     UMINUS = 278,                  /* UMINUS  */
     THROW_KW = 279,                /* THROW_KW  */
-    NULL_KW = 280,                 /* NULL_KW  */
-    OP_INC = 281,                  /* OP_INC  */
-    OP_DEC = 282,                  /* OP_DEC  */
-    LEFT_PARENT = 283,             /* LEFT_PARENT  */
-    RIGHT_PARENT = 284,            /* RIGHT_PARENT  */
-    LEFT_BRACKET = 285,            /* LEFT_BRACKET  */
-    RIGHT_BRACKET = 286,           /* RIGHT_BRACKET  */
-    LEFT_SQUARE = 287,             /* LEFT_SQUARE  */
-    RIGHT_SQUARE = 288,            /* RIGHT_SQUARE  */
-    COMMA = 289,                   /* COMMA  */
-    DOT = 290,                     /* DOT  */
-    D_COLON = 291,                 /* D_COLON  */
-    COLON = 292,                   /* COLON  */
-    FOR_KW = 293,                  /* FOR_KW  */
-    WHILE_KW = 294,                /* WHILE_KW  */
-    DO_KW = 295,                   /* DO_KW  */
-    BREAK_KW = 296,                /* BREAK_KW  */
-    RETURN_KW = 297,               /* RETURN_KW  */
-    TRUE_KW = 298,                 /* TRUE_KW  */
-    FALSE_KW = 299,                /* FALSE_KW  */
-    FUNCTION_KW = 300,             /* FUNCTION_KW  */
-    TRY_KW = 301,                  /* TRY_KW  */
-    CATCH_KW = 302,                /* CATCH_KW  */
-    FINALLY_KW = 303,              /* FINALLY_KW  */
-    CHAR_KW = 304,                 /* CHAR_KW  */
-    INT_KW = 305,                  /* INT_KW  */
-    FLOAT_KW = 306,                /* FLOAT_KW  */
-    BOOL_KW = 307,                 /* BOOL_KW  */
-    STRING_KW = 308,               /* STRING_KW  */
-    VOID_KW = 309,                 /* VOID_KW  */
-    IF_KW = 310,                   /* IF_KW  */
-    ELSE_KW = 311,                 /* ELSE_KW  */
-    SWITCH_KW = 312,               /* SWITCH_KW  */
-    CASE_KW = 313,                 /* CASE_KW  */
-    DEFAULT_KW = 314,              /* DEFAULT_KW  */
-    CHAR = 315,                    /* CHAR  */
-    STRING = 316,                  /* STRING  */
-    NUM = 317,                     /* NUM  */
-    NUM_DEC = 318,                 /* NUM_DEC  */
-    IDENTIFIER = 319,              /* IDENTIFIER  */
-    EOL = 320                      /* EOL  */
+    OP_INC = 280,                  /* OP_INC  */
+    OP_DEC = 281,                  /* OP_DEC  */
+    LEFT_PARENT = 282,             /* LEFT_PARENT  */
+    RIGHT_PARENT = 283,            /* RIGHT_PARENT  */
+    LEFT_BRACKET = 284,            /* LEFT_BRACKET  */
+    RIGHT_BRACKET = 285,           /* RIGHT_BRACKET  */
+    COMMA = 286,                   /* COMMA  */
+    D_COLON = 287,                 /* D_COLON  */
+    COLON = 288,                   /* COLON  */
+    FOR_KW = 289,                  /* FOR_KW  */
+    WHILE_KW = 290,                /* WHILE_KW  */
+    DO_KW = 291,                   /* DO_KW  */
+    BREAK_KW = 292,                /* BREAK_KW  */
+    RETURN_KW = 293,               /* RETURN_KW  */
+    TRUE_KW = 294,                 /* TRUE_KW  */
+    FALSE_KW = 295,                /* FALSE_KW  */
+    FUNCTION_KW = 296,             /* FUNCTION_KW  */
+    TRY_KW = 297,                  /* TRY_KW  */
+    CATCH_KW = 298,                /* CATCH_KW  */
+    FINALLY_KW = 299,              /* FINALLY_KW  */
+    CHAR_KW = 300,                 /* CHAR_KW  */
+    INT_KW = 301,                  /* INT_KW  */
+    FLOAT_KW = 302,                /* FLOAT_KW  */
+    BOOL_KW = 303,                 /* BOOL_KW  */
+    STRING_KW = 304,               /* STRING_KW  */
+    VOID_KW = 305,                 /* VOID_KW  */
+    IF_KW = 306,                   /* IF_KW  */
+    ELSE_KW = 307,                 /* ELSE_KW  */
+    SWITCH_KW = 308,               /* SWITCH_KW  */
+    CASE_KW = 309,                 /* CASE_KW  */
+    DEFAULT_KW = 310,              /* DEFAULT_KW  */
+    CHAR = 311,                    /* CHAR  */
+    STRING = 312,                  /* STRING  */
+    NUM = 313,                     /* NUM  */
+    NUM_DEC = 314,                 /* NUM_DEC  */
+    IDENTIFIER = 315,              /* IDENTIFIER  */
+    EOL = 316                      /* EOL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -125,7 +121,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 224 "sintax_analizer.y"
+#line 225 "sintax_analizer.y"
 
     int ival;
     char *sval;
@@ -136,7 +132,7 @@ union YYSTYPE
         double val;
     } sdata;
 
-#line 140 "sintax_analizer.tab.h"
+#line 136 "sintax_analizer.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

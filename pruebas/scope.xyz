@@ -10,3 +10,9 @@ function test() : void {
 }
 
 test()
+
+function main() : void {
+    test()
+}
+
+main()

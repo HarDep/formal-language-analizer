@@ -1,0 +1,27 @@
+
+function main(): void {
+    /* ... */
+}
+
+function sum(a: int, b: int): int {
+    return a + b
+}
+
+function recursive(a: int, b: int): int {
+    if (a == 0) {
+        return b
+    }
+    return recursive(a - 1, b + 1)
+}
+
+main()
+
+sum(a: 1, b: 2)
+
+recursive(a: 1, b: 2)
+
+function callOtherFunctions(): void {
+    main()
+    sum(a: 2, b: 2)
+    recursive(a: 5, b: 7)
+}

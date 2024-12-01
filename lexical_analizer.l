@@ -44,7 +44,6 @@ try                                     {if (!isComment) {return TRY_KW;}}
 catch                                   {if (!isComment) {return CATCH_KW;}}
 finally                                 {if (!isComment) {return FINALLY_KW;}}
 throw                                   {if (!isComment) {return THROW_KW;}}
-null                                    {if (!isComment) {return NULL_KW;}}
 \+\+                                    {if (!isComment) {return OP_INC;}}
 \+\=                                    {if (!isComment) {return OP_ADD_ASSIGN;}}
 \+                                      {if (!isComment) {return OP_ADD;}}
@@ -71,8 +70,6 @@ null                                    {if (!isComment) {return NULL_KW;}}
 \)                                      {if (!isComment) {return RIGHT_PARENT;}}
 \{                                      {if (!isComment) {return LEFT_BRACKET;}}
 \}                                      {if (!isComment) {return RIGHT_BRACKET;}}
-\[                                      {if (!isComment) {return LEFT_SQUARE;}}
-\]                                      {if (!isComment) {return RIGHT_SQUARE;}}
 \,                                      {if (!isComment) {return COMMA;}}
 \:\:                                    {if (!isComment) {return D_COLON;}}
 \:                                      {if (!isComment) {return COLON;}}
@@ -81,7 +78,6 @@ null                                    {if (!isComment) {return NULL_KW;}}
 {STRING}                                {if (!isComment) {return STRING;}}
 {digit}+\.{digit}+                      {if (!isComment) {yylval.dval = atof(yytext);return NUM_DEC;}}
 {digit}+                                {if (!isComment) {yylval.dval = atof(yytext);return NUM;}}
-\.                                      {if (!isComment) {return DOT;}}
 \n                                      {lineNum++;if (!isComment) {return EOL;}}
 [ \t\r\f]                               {/* Ignore spaces */}
 .                                       {printf("Lexical error at line %d, cannot recognize the token: %s\n", lineNum, yytext);hasErrors = true;}

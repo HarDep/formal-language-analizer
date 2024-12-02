@@ -5,6 +5,7 @@ try {
     a = 10 / 0  // Error: división por cero
 } catch (error) {
     a = 5 // se atrapa el error y se ejecuta el bloque
+    throw Exception("Error: division por cero")
 } finally {
     int b = a
 }
@@ -15,4 +16,5 @@ try {
     b = 10 > 0  // Error: error logico de comparacion
 } catch (error) {
     b = true // se atrapa el error y se ejecuta el bloque
+    throw Exception("Error: error logico de comparacion") 
 }

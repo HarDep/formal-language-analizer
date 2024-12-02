@@ -34,6 +34,6 @@ switch (x) {
         break
     default:
         break
-    default: // Error: se puede tener solo un default
+    default:
         break
-}
+} // Error: se puede tener solo un default

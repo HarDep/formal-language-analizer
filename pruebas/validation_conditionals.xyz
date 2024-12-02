@@ -24,9 +24,9 @@ switch (x) {
     case 5:
         int y = 5
         break
-    case "hola": // Error: cases con diferentes tipos
+    case "hola":
         break
-}
+} // Error: cases con diferentes tipos
 
 switch (x) {
     case 5:
